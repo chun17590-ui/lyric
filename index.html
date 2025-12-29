@@ -1,0 +1,3482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>LyricStudio Pro v9.9.9.9.9.9.6 | Suno v5 Anti-Refresh Fix</title>
+
+    <!-- Dependencies -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.0/lame.min.js"></script>
+
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        daw: {
+                            bg: '#09090b',       /* Zinc 950 */
+                            panel: '#18181b',    /* Zinc 900 */
+                            border: '#27272a',   /* Zinc 800 */
+                            surface: '#27272a',
+                            accent: '#d946ef',   /* Fuchsia 500 */
+                            accentHover: '#c026d3',
+                            text: '#e4e4e7',     /* Zinc 200 */
+                            muted: '#a1a1aa'     /* Zinc 400 */
+                        }
+                    },
+                    fontFamily: {
+                        'serif': ['"Noto Serif SC"', 'serif'],
+                        'mono': ['"JetBrains Mono"', 'monospace'],
+                        'sans': ['"Inter"', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-fast': 'pulse 0.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'spin-slow': 'spin 3s linear infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* ========================================
+           THEME TRANSITION - P3 UPGRADE
+           Smooth color transitions when switching themes
+           ======================================== */
+        body {
+            background-color: #09090b;
+            color: #e4e4e7;
+            font-family: 'Inter', system-ui, sans-serif;
+            overflow: hidden;
+            height: 100dvh;
+            width: 100vw;
+
+            /* Smooth theme transition */
+            transition:
+                background-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                color 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Prevent transition on initial load */
+        body.no-transition {
+            transition: none !important;
+        }
+
+        /* =========================================
+           MGX DESIGN SYSTEM V2 (PREMIUM POLISH)
+           Top-Tier Aesthetics: Inter Font, Diffused Shadows, Micro-Interactions
+           ========================================= */
+
+        body.theme-mgx {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segou UI", Roboto, sans-serif !important;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            letter-spacing: -0.015em;
+            background-color: #FFFFFF !important;
+            color: #1F2937 !important;
+
+            /* ========================================
+               MGX DESIGN SYSTEM - CSS VARIABLES
+               ======================================== */
+
+            /* Color System - 9-Level Gray Scale */
+            --mgx-white: #FFFFFF;
+            --mgx-gray-50: #FAFAFA;
+            --mgx-gray-100: #F5F5F5;
+            --mgx-gray-200: #E5E5E5;
+            --mgx-gray-300: #D4D4D4;
+            --mgx-gray-400: #A3A3A3;
+            --mgx-gray-500: #737373;
+            --mgx-gray-600: #525252;
+            --mgx-gray-700: #404040;
+            --mgx-gray-800: #262626;
+            --mgx-gray-900: #171717;
+
+            /* Border Radius System */
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --radius-full: 9999px;
+
+            /* Shadow System */
+            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.10);
+            --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.12);
+
+            /* Spacing System (8px base) */
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-6: 24px;
+            --space-8: 32px;
+            --space-12: 48px;
+
+            /* Typography System */
+            --text-xs: 11px;
+            --text-sm: 13px;
+            --text-base: 14px;
+            --text-lg: 16px;
+            --text-xl: 18px;
+            --text-2xl: 24px;
+
+            /* Line Height */
+            --leading-tight: 1.25;
+            --leading-normal: 1.5;
+            --leading-relaxed: 1.75;
+
+            /* Font Weight */
+            --font-normal: 400;
+            --font-medium: 500;
+            --font-semibold: 600;
+            --font-bold: 700;
+
+            /* Animation Duration */
+            --duration-fast: 150ms;
+            --duration-normal: 200ms;
+            --duration-slow: 300ms;
+
+            /* Easing Functions */
+            --ease-in: cubic-bezier(0.4, 0, 1, 1);
+            --ease-out: cubic-bezier(0, 0, 0.2, 1);
+            --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+            --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* 0. GLOBAL RESET & CLEANUP */
+        body.theme-mgx main,
+        body.theme-mgx header,
+        body.theme-mgx aside,
+        body.theme-mgx footer,
+        body.theme-mgx .bg-daw-bg,
+        body.theme-mgx .bg-zinc-950,
+        body.theme-mgx .bg-zinc-900,
+        body.theme-mgx .bg-neutral-900,
+        body.theme-mgx .bg-black\/20,
+        body.theme-mgx .bg-black\/40 {
+            background-color: #FFFFFF !important;
+            background-image: none !important;
+            backdrop-filter: none !important;
+            border-color: rgba(0, 0, 0, 0.06) !important;
+            /* Extremely subtle borders */
+        }
+
+        /* 1. TYPOGRAPHY - HIERARCHY */
+        body.theme-mgx h1,
+        body.theme-mgx h2,
+        body.theme-mgx h3,
+        body.theme-mgx .font-bold {
+            font-weight: 600 !important;
+            letter-spacing: -0.025em !important;
+            color: #111827 !important;
+            /* Almost Black */
+        }
+
+        body.theme-mgx .text-xs,
+        body.theme-mgx .text-[10px],
+        body.theme-mgx .text-[11px] {
+            font-weight: 500 !important;
+            letter-spacing: 0.01em !important;
+        }
+
+        /* 2. COLOR PALETTE - MATTE FINISH */
+        body.theme-mgx .text-white,
+        body.theme-mgx .text-gray-100,
+        body.theme-mgx .text-gray-200,
+        body.theme-mgx .text-daw-text {
+            color: #1F2937 !important;
+            /* Slate 800 */
+        }
+
+        body.theme-mgx .text-gray-400,
+        body.theme-mgx .text-gray-500,
+        body.theme-mgx .text-fuchsia-500,
+        body.theme-mgx .text-fuchsia-400 {
+            color: #6B7280 !important;
+            /* Slate 500 */
+        }
+
+        /* 3. INTERACTIVE ELEMENTS - PREMIUM FEEL */
+
+        /* Inputs */
+        body.theme-mgx input,
+        body.theme-mgx textarea,
+        body.theme-mgx select {
+            background-color: #F9FAFB !important;
+            /* Very light slate */
+            border: 1px solid #E5E7EB !important;
+            border-radius: 12px !important;
+            /* Modern rounding */
+            color: #111827 !important;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+            transition: all 0.2s ease !important;
+        }
+
+        body.theme-mgx input:focus,
+        body.theme-mgx textarea:focus {
+            background-color: #FFFFFF !important;
+            border-color: #9CA3AF !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+            /* Lift on focus */
+            outline: none !important;
+        }
+
+        /* Buttons - General */
+        body.theme-mgx button {
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+
+        body.theme-mgx button:active {
+            transform: scale(0.97) !important;
+        }
+
+        /* 4. ELIMINATE PURPLE TRACES */
+        body.theme-mgx .bg-fuchsia-600,
+        body.theme-mgx .bg-fuchsia-500,
+        body.theme-mgx .bg-gradient-to-br,
+        body.theme-mgx .from-fuchsia-600 {
+            background-image: none !important;
+            background-color: #374151 !important;
+            border-color: transparent !important;
+            color: #FFFFFF !important;
+        }
+
+        body.theme-mgx .shadow-fuchsia-900\/20 {
+            box-shadow: none !important;
+        }
+
+        /* ========================================
+           SIDEBAR & CHIPS UPGRADE
+           ======================================== */
+
+        /* Sidebar Background - Subtle Gradient */
+        body.theme-mgx aside {
+            background: linear-gradient(180deg, var(--mgx-gray-50) 0%, var(--mgx-white) 100%) !important;
+            border-right: 1px solid rgba(0, 0, 0, 0.06) !important;
+        }
+
+        /* Section Titles */
+        body.theme-mgx aside h3,
+        body.theme-mgx aside .text-\[10px\].uppercase {
+            color: var(--mgx-gray-900) !important;
+            font-size: var(--text-xs) !important;
+            font-weight: var(--font-semibold) !important;
+            letter-spacing: 0.05em !important;
+            text-transform: uppercase !important;
+        }
+
+        /* Chip Buttons (Vibe Chips) */
+        body.theme-mgx .chip,
+        body.theme-mgx [class*="chip-"] {
+            background: var(--mgx-white) !important;
+            border: 1px solid rgba(0, 0, 0, 0.08) !important;
+            border-radius: var(--radius-sm) !important;
+            /* 6px for precision */
+            padding: 6px 10px !important;
+            font-size: 12px !important;
+            font-weight: var(--font-medium) !important;
+            color: var(--mgx-gray-600) !important;
+            transition: all var(--duration-fast) var(--ease-out) !important;
+        }
+
+        body.theme-mgx .chip:hover,
+        body.theme-mgx [class*="chip-"]:hover {
+            background: var(--mgx-gray-50) !important;
+            border-color: rgba(0, 0, 0, 0.12) !important;
+            transform: translateY(-1px) !important;
+            box-shadow: var(--shadow-sm) !important;
+        }
+
+        body.theme-mgx .chip.active,
+        body.theme-mgx .chip-active-override {
+            background: var(--mgx-gray-800) !important;
+            border-color: var(--mgx-gray-800) !important;
+            color: var(--mgx-white) !important;
+            box-shadow: var(--shadow-sm) !important;
+        }
+
+        /* 3. SHAPES - MODERN ROUNDED (REMOVED PILL OVERRIDE) */
+        /* Allow buttons to keep their individual border-radius */
+
+        /* Exception: Textarea/Inputs use consistent radius */
+        body.theme-mgx textarea,
+        body.theme-mgx input[type="text"] {
+            border-radius: var(--radius-md) !important;
+            /* 8px */
+            background-color: #FAFAFA !important;
+            border: 1px solid #E5E5E5 !important;
+            color: #1F2937 !important;
+            box-shadow: none !important;
+        }
+
+        /* 4. SECONDARY BUTTONS (Active/Inactive Chips) */
+        body.theme-mgx .bg-white\/10,
+        body.theme-mgx .bg-white\/5,
+        body.theme-mgx .chip-inactive {
+            background-color: #F3F4F6 !important;
+            /* Light Grey */
+            border: 1px solid #E5E5E5 !important;
+            color: #4B5563 !important;
+        }
+
+        body.theme-mgx .chip-active {
+            background-color: #374151 !important;
+            /* Dark Grey */
+            color: #FFFFFF !important;
+            border-color: #374151 !important;
+        }
+
+        /* 5. HEADER & BORDERS */
+        body.theme-mgx header,
+        body.theme-mgx .border-white\/5,
+        body.theme-mgx .border-white\/10 {
+            border-color: #F0F0F0 !important;
+        }
+
+        /* 6. LOGO & BADGES */
+        body.theme-mgx #trialBadge {
+            background-color: #F3F4F6 !important;
+            color: #374151 !important;
+        }
+
+        /* Logo Box */
+        body.theme-mgx div.w-7.h-7 {
+            border-radius: 8px !important;
+        }
+
+        /* 7. LYRICS & CHORDS TEXT */
+        body.theme-mgx .lyric-line {
+            color: #374151 !important;
+            /* Soft Text */
+        }
+
+        body.theme-mgx .text-[10px].uppercase.tracking-wider {
+            color: #9CA3AF !important;
+        }
+
+        /* Suno Status Text specific */
+        body.theme-mgx #sunoAudioStatus {
+            color: #6B7280 !important;
+        }
+
+        /* Scrollbars for MGX */
+        .theme-mgx ::-webkit-scrollbar-thumb {
+            background: #D1D5DB !important;
+        }
+
+        .theme-mgx ::-webkit-scrollbar-thumb:hover {
+            background: #9CA3AF !important;
+        }
+
+        /* ========================================
+           INPUT & SELECT UPGRADE
+           ======================================== */
+
+        /* Base State */
+        body.theme-mgx select,
+        body.theme-mgx input[type="text"],
+        body.theme-mgx textarea {
+            background: var(--mgx-white) !important;
+            border: 1px solid rgba(0, 0, 0, 0.08) !important;
+            border-radius: var(--radius-md) !important;
+            padding: var(--space-2) var(--space-3) !important;
+            font-size: var(--text-base) !important;
+            color: var(--mgx-gray-900) !important;
+            transition: all var(--duration-fast) var(--ease-out) !important;
+        }
+
+        /* Hover State */
+        body.theme-mgx select:hover,
+        body.theme-mgx input[type="text"]:hover,
+        body.theme-mgx textarea:hover {
+            border-color: rgba(0, 0, 0, 0.12) !important;
+            background: var(--mgx-gray-50) !important;
+        }
+
+        /* Focus State with Ring */
+        body.theme-mgx select:focus,
+        body.theme-mgx input[type="text"]:focus,
+        body.theme-mgx textarea:focus {
+            outline: none !important;
+            border-color: var(--mgx-gray-700) !important;
+            background: var(--mgx-white) !important;
+            box-shadow: 0 0 0 3px rgba(64, 64, 64, 0.08) !important;
+            /* Focus ring */
+        }
+
+        /* Override legacy focus rings */
+        body.theme-mgx *:focus,
+        body.theme-mgx input:focus,
+        body.theme-mgx textarea:focus,
+        body.theme-mgx select:focus {
+            --tw-ring-color: rgba(64, 64, 64, 0.08) !important;
+            outline-color: var(--mgx-gray-700) !important;
+        }
+
+        body.theme-mgx .focus\:ring-fuchsia-500\/50:focus {
+            --tw-ring-color: rgba(64, 64, 64, 0.08) !important;
+            box-shadow: 0 0 0 3px rgba(64, 64, 64, 0.08) !important;
+        }
+
+        /* 2. Hover Borders */
+        body.theme-mgx .hover\:border-fuchsia-500\/50:hover {
+            border-color: #D1D5DB !important;
+        }
+
+        /* 3. Gradient Ends (Logo) */
+        body.theme-mgx .to-purple-600 {
+            --tw-gradient-to: #374151 !important;
+        }
+
+        /* 4. Text Selection */
+        body.theme-mgx ::selection {
+            background-color: #E5E7EB !important;
+            color: #1F2937 !important;
+        }
+
+        /* 5. Range Sliders (if any) */
+        body.theme-mgx input[type=range]::-webkit-slider-thumb {
+            background: #4B5563 !important;
+        }
+
+        /* 6. Specific JS Dynamic Classes (Safety Net) */
+        body.theme-mgx .bg-fuchsia-600.text-white.border-fuchsia-500 {
+            background-color: #374151 !important;
+            border-color: #374151 !important;
+            color: #FFFFFF !important;
+        }
+
+        /* 7. SIDEBAR BOTTOM FIX (Remove Black Block) */
+        body.theme-mgx .border-t.border-white\/10.bg-black\/20,
+        body.theme-mgx .bg-black\/20.backdrop-blur-md {
+            background-color: transparent !important;
+            border-top: 1px solid #F0F0F0 !important;
+            backdrop-filter: none !important;
+        }
+
+        /* Remove blur and transparency from Manual/Instructions */
+        body.theme-mgx #lyricsEditor .bg-white\/5 {
+            background-color: var(--mgx-white) !important;
+            /* Solid white */
+            border: 1px solid rgba(0, 0, 0, 0.10) !important;
+            /* Clear border */
+            backdrop-filter: none !important;
+        }
+
+        body.theme-mgx .text-xs.font-bold.text-white {
+            /* Keep it Grey as main CTA inside Sidebar */
+            color: #374151 !important;
+        }
+
+        body.theme-mgx .text-gray-400.text-\[10px\] {
+            color: #6B7280 !important;
+        }
+
+        /* 8. PRECISE ELEMENT FIXES (Record, Copy, Version) */
+
+        /* Version Number - Grey */
+        body.theme-mgx header span.text-fuchsia-500\/80 {
+            color: #9CA3AF !important;
+        }
+
+        /* Core Prompt & Artist Icons - Medium Grey */
+        body.theme-mgx i.text-fuchsia-400\/90,
+        body.theme-mgx div.text-fuchsia-400\/90,
+        body.theme-mgx .text-fuchsia-400 {
+            color: #4B5563 !important;
+        }
+
+        /* Record Button - Soft Red */
+        body.theme-mgx #btnRecord {
+            background-color: #FEF2F2 !important;
+            border: 1px solid #FECACA !important;
+            color: #EF4444 !important;
+        }
+
+        body.theme-mgx #btnRecord:hover {
+            background-color: #FEE2E2 !important;
+        }
+
+        /* Copy Buttons - Soft Grey */
+        body.theme-mgx #btnCopyLyrics,
+        body.theme-mgx #btnCopyPrompt,
+        body.theme-mgx .rounded-full.bg-white\/10 {
+            background-color: #F3F4F6 !important;
+            color: #4B5563 !important;
+            border: 1px solid #E5E5E5 !important;
+        }
+
+        /* Visualizer Ring - Soft */
+        body.theme-mgx #visualizerRing {
+            opacity: 0.15 !important;
+            mix-blend-mode: multiply;
+        }
+
+        /* Fix any potential black Overlay in "Generate Area" */
+        body.theme-mgx aside .bg-gradient-to-t {
+            background: none !important;
+        }
+
+        /* 9. SIDEBAR BOTTOM BLACK BLOCK KILLER */
+        body.theme-mgx .bg-\[\#09090b\] {
+            background-color: transparent !important;
+        }
+
+        body.theme-mgx #btnSunoPanel {
+            color: #374151 !important;
+            /* Dark Grey Text */
+            border-color: #E5E5E5 !important;
+        }
+
+        body.theme-mgx #btnSunoPanel:hover {
+            background-color: #F3F4F6 !important;
+        }
+
+        /* 10. GENERATE BUTTON - LEGACY REMOVED */
+        /* (Rule consolidated below in Section 11) */
+
+        /* 11. SUNO UI & MODALS FIX */
+        body.theme-mgx .bg-white\/5,
+        body.theme-mgx .bg-black\/90,
+        body.theme-mgx .bg-\[\#18181b\] {
+            background-color: #FFFFFF !important;
+            border: 1px solid #E5E5E5 !important;
+            color: #1F2937 !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        /* Step Badge (1, 2, 3...) */
+        body.theme-mgx .bg-gray-700.rounded-full.text-white {
+            background-color: #F3F4F6 !important;
+            color: #1F2937 !important;
+            font-weight: bold !important;
+        }
+
+        /* Suno Status Text */
+        body.theme-mgx .text-fuchsia-300,
+        body.theme-mgx .text-fuchsia-500 {
+            color: #4B5563 !important;
+            /* Grey instead of Purple */
+        }
+
+        /* 11. UNIFIED BUTTONS & HOVER FIXES */
+
+        /* A. Global Hover Fix - KILL ALL PURPLE */
+        body.theme-mgx *:hover,
+        body.theme-mgx .group:hover .text-fuchsia-400,
+        body.theme-mgx button:hover {
+            --tw-text-opacity: 1;
+            /* No Purple Text on Hover */
+            color: #111827 !important;
+            /* dark-grey/black */
+            border-color: #9CA3AF !important;
+        }
+
+        /* B. Generate Button - MUST BE BOLD & VISIBLE */
+        /* B. Generate Button - WHITE High Contrast */
+        /* ========================================
+           BUTTON SYSTEM UPGRADE
+           ======================================== */
+
+        /* Primary Button - Generate */
+        body.theme-mgx #btnGenerate {
+            background: var(--mgx-gray-900) !important;
+            color: var(--mgx-white) !important;
+            border: none !important;
+            border-radius: var(--radius-lg) !important;
+            /* 12px to match Suno */
+            padding: var(--space-3) var(--space-4) !important;
+            font-weight: var(--font-medium) !important;
+            font-size: var(--text-sm) !important;
+            box-shadow: var(--shadow-sm) !important;
+            transition: all var(--duration-fast) var(--ease-out) !important;
+        }
+
+        body.theme-mgx #btnGenerate:hover {
+            background: var(--mgx-gray-800) !important;
+            box-shadow: var(--shadow-md) !important;
+            transform: translateY(-1px) !important;
+        }
+
+        body.theme-mgx #btnGenerate:active {
+            background: var(--mgx-gray-900) !important;
+            box-shadow: var(--shadow-xs) !important;
+            transform: translateY(0) !important;
+        }
+
+        /* Generate Button Inner Content */
+        body.theme-mgx #btnGenerate>div {
+            background-color: transparent !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 0 !important;
+            width: 100% !important;
+            height: auto !important;
+        }
+
+        body.theme-mgx #btnGenerate span,
+        body.theme-mgx #btnGenerate i {
+            color: var(--mgx-white) !important;
+        }
+
+        /* Secondary Buttons - Copy Lyrics/Tags */
+        body.theme-mgx #btnCopyLyrics,
+        body.theme-mgx #btnCopyTags {
+            background: var(--mgx-white) !important;
+            border: 1px solid rgba(0, 0, 0, 0.08) !important;
+            color: var(--mgx-gray-600) !important;
+            border-radius: var(--radius-md) !important;
+            padding: var(--space-2) var(--space-3) !important;
+            font-weight: var(--font-medium) !important;
+            font-size: var(--text-sm) !important;
+            transition: all var(--duration-fast) var(--ease-out) !important;
+        }
+
+        body.theme-mgx #btnCopyLyrics:hover,
+        body.theme-mgx #btnCopyTags:hover {
+            background: var(--mgx-gray-50) !important;
+            border-color: rgba(0, 0, 0, 0.12) !important;
+            color: var(--mgx-gray-900) !important;
+            box-shadow: var(--shadow-xs) !important;
+        }
+
+        body.theme-mgx #btnCopyLyrics:active,
+        body.theme-mgx #btnCopyTags:active {
+            background: var(--mgx-gray-100) !important;
+            transform: scale(0.98) !important;
+        }
+
+        /* MOBILE ADAPTATION (Top Toolbar) */
+        @media (max-width: 640px) {
+
+            body.theme-mgx #btnCopyLyrics,
+            body.theme-mgx #btnCopyTags {
+                padding: 4px 8px !important;
+                font-size: 10px !important;
+            }
+
+            body.theme-mgx #btnCopyLyrics i,
+            body.theme-mgx #btnCopyTags i {
+                width: 12px !important;
+                height: 12px !important;
+            }
+        }
+
+        /* C. Smooth Button - MIMIC CHIPS (Grounded) */
+        /* Default (Inactive) matches chip-inactive */
+        body.theme-mgx #btnVibeSmooth {
+            background-color: #F3F4F6 !important;
+            border: 1px solid #E5E5E5 !important;
+            color: #4B5563 !important;
+            box-shadow: none !important;
+        }
+
+        /* Active matches chip-active (via JS class injection) */
+        body.theme-mgx #btnVibeSmooth.chip-active-override {
+            background-color: #374151 !important;
+            border-color: #374151 !important;
+            color: #FFFFFF !important;
+        }
+
+        body.theme-mgx #btnVibeSmooth:hover {
+            filter: brightness(0.95);
+        }
+
+        /* Suno Buttons */
+        body.theme-mgx #btnSunoPanel,
+        body.theme-mgx #btnSunoAction {
+            background-color: #FFFFFF !important;
+            color: #374151 !important;
+            border: 1px solid #D1D5DB !important;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+        }
+
+        body.theme-mgx #btnSunoPanel:hover,
+        body.theme-mgx #btnSunoAction:hover {
+            background-color: #F3F4F6 !important;
+            border-color: #9CA3AF !important;
+        }
+
+        /* FIX: Logo - Grey/White Contrast */
+        body.theme-mgx header .text-gray-100 {
+            color: #FFFFFF !important;
+            /* White Text */
+        }
+
+        body.theme-mgx header .text-fuchsia-500\/80 {
+            color: #E5E7EB !important;
+            /* Light Grey Text */
+        }
+
+        body.theme-mgx header .bg-gradient-to-br {
+            background: #4B5563 !important;
+            /* Medium Grey Box */
+            box-shadow: none !important;
+        }
+
+        /* FIX: Unified Copy Buttons - White Default, Grey Hover */
+        body.theme-mgx #btnCopyLyrics,
+        body.theme-mgx #btnCopyTags {
+            background-color: #FFFFFF !important;
+            /* Default White */
+            border: 1px solid #E5E5E5 !important;
+            color: #4B5563 !important;
+            /* Grey Text */
+        }
+
+        body.theme-mgx #btnCopyLyrics:hover,
+        body.theme-mgx #btnCopyTags:hover {
+            background-color: #F3F4F6 !important;
+            /* Hover Grey */
+            color: #111827 !important;
+            /* Darker Text */
+            border-color: #D1D5DB !important;
+        }
+
+        body.theme-mgx #btnCopyLyrics:active,
+        body.theme-mgx #btnCopyTags:active {
+            background-color: #E5E7EB !important;
+            transform: scale(0.98);
+        }
+
+        /* ========================================
+           HEADER UPGRADE - MAXIMUM SEPARATION
+           ======================================== */
+        body.theme-mgx header {
+            background: var(--mgx-white) !important;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.20) !important;
+            /* 2px very dark border */
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+            /* Deep prominent shadow */
+            height: 56px !important;
+        }
+
+        /* Logo Box - Subtle Gradient */
+        body.theme-mgx header .bg-gradient-to-br {
+            background: linear-gradient(135deg, var(--mgx-gray-700) 0%, var(--mgx-gray-800) 100%) !important;
+            border-radius: var(--radius-sm) !important;
+            box-shadow: var(--shadow-sm) !important;
+        }
+
+        /* Logo Text - Enhanced Typography */
+        body.theme-mgx header .text-gray-100 {
+            color: var(--mgx-gray-900) !important;
+            font-weight: var(--font-semibold) !important;
+            letter-spacing: -0.02em !important;
+        }
+
+        body.theme-mgx header .text-fuchsia-500\/80 {
+            color: var(--mgx-gray-500) !important;
+            font-size: var(--text-xs) !important;
+        }
+
+        /* Trial Badge */
+        body.theme-mgx #trialBadge {
+            background: var(--mgx-gray-100) !important;
+            color: var(--mgx-gray-600) !important;
+            border-radius: var(--radius-sm) !important;
+            font-size: var(--text-xs) !important;
+            font-weight: var(--font-medium) !important;
+        }
+
+        /* Header Buttons */
+        body.theme-mgx header button {
+            color: var(--mgx-gray-600) !important;
+            transition: all var(--duration-fast) var(--ease-out) !important;
+        }
+
+        body.theme-mgx header button:hover {
+            color: var(--mgx-gray-900) !important;
+            background: var(--mgx-gray-100) !important;
+        }
+
+        /* ========================================
+           MAXIMUM REGION SEPARATION
+           ======================================== */
+
+        /* Sidebar - Very Strong Visual Separation */
+        body.theme-mgx aside {
+            background: linear-gradient(180deg, #EEEEEE 0%, #F5F5F5 100%) !important;
+            /* Deep gray gradient */
+            border-right: 2px solid rgba(0, 0, 0, 0.25) !important;
+            /* 2px very dark border */
+            box-shadow: 4px 0 16px rgba(0, 0, 0, 0.10) !important;
+            /* Wide deep shadow */
+        }
+
+        /* Editor Toolbar - Match Sidebar Background */
+        body.theme-mgx main>div:first-child {
+            background: linear-gradient(90deg, #EEEEEE 0%, #F5F5F5 100%) !important;
+            /* Same as sidebar */
+            border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
+        }
+
+        /* Main Editor Area - Strong Gray Background */
+        body.theme-mgx main {
+            background: #EEEEEE !important;
+            /* Noticeable gray */
+        }
+
+        /* Editor Content Area - Pure White with Strong Border */
+        body.theme-mgx #editorScroll {
+            background: var(--mgx-white) !important;
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.12) inset !important;
+            /* 2px inner border */
+            border-radius: var(--radius-md) !important;
+            margin: var(--space-2) !important;
+        }
+
+        /* Footer - Very Strong Top Separation */
+        body.theme-mgx footer {
+            background-color: var(--mgx-white) !important;
+            border-top: 2px solid rgba(0, 0, 0, 0.25) !important;
+            /* 2px very dark border */
+            box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.12) !important;
+            /* Deep wide shadow */
+        }
+
+        /* ========================================
+           RECORDER BUTTON UPGRADE
+           ======================================== */
+        body.theme-mgx #btnRecord {
+            background: var(--mgx-white) !important;
+            border: 3px solid var(--mgx-gray-100) !important;
+            /* Reduced from 4px */
+            border-radius: var(--radius-full) !important;
+            box-shadow:
+                var(--shadow-md),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+            /* Inner highlight */
+            transition: all var(--duration-normal) var(--ease-out) !important;
+        }
+
+        body.theme-mgx #btnRecord:hover {
+            border-color: var(--mgx-gray-200) !important;
+            box-shadow:
+                var(--shadow-lg),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+            transform: translateY(-2px) !important;
+        }
+
+        body.theme-mgx #btnRecord:active {
+            transform: scale(0.96) !important;
+            box-shadow:
+                var(--shadow-sm),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+        }
+
+        /* Recording Dot - Neutral Gray with Subtle Highlight */
+        body.theme-mgx #recDot {
+            background: var(--mgx-gray-400) !important;
+            border-radius: var(--radius-full) !important;
+            box-shadow:
+                var(--shadow-sm),
+                inset 0 1px 2px rgba(255, 255, 255, 0.2) !important;
+            transition: all var(--duration-normal) var(--ease-out) !important;
+        }
+
+        /* Recording Pulse - Darker with Ripple Effect */
+        body.theme-mgx #recDot.animate-pulse {
+            background: var(--mgx-gray-600) !important;
+            box-shadow:
+                0 0 0 4px rgba(82, 82, 82, 0.1),
+                0 0 0 8px rgba(82, 82, 82, 0.05) !important;
+        }
+
+        /* Suno Icon Specifics */
+        body.theme-mgx #btnSunoPanel i {
+            color: #374151 !important;
+        }
+
+        /* Modals (Password/Auth) */
+        body.theme-mgx #passwordModal,
+        body.theme-mgx #authModal {
+            background-color: rgba(255, 255, 255, 0.8) !important;
+            backdrop-filter: blur(8px) !important;
+        }
+
+        body.theme-mgx #passwordModal .bg-\[\#18181b\] {
+            background-color: #FFFFFF !important;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        body.theme-mgx input#unlockPasswordInput,
+        body.theme-mgx input#authUsername,
+        body.theme-mgx input#authPassword {
+            background-color: #F9FAFB !important;
+            color: #1F2937 !important;
+            border: 1px solid #E5E5E5 !important;
+        }
+
+        /* ========================================
+           RESPONSIVE OPTIMIZATION
+           ======================================== */
+        @media (max-width: 768px) {
+
+            /* Increase touch targets for mobile */
+            body.theme-mgx button {
+                min-height: 44px !important;
+                /* iOS recommended minimum */
+                padding: var(--space-3) var(--space-4) !important;
+            }
+
+            /* Increase spacing to avoid mis-taps */
+            body.theme-mgx .button-group,
+            body.theme-mgx .flex.gap-2 {
+                gap: var(--space-3) !important;
+                /* From 8px to 12px */
+            }
+
+            /* Bottom safe area for iOS */
+            body.theme-mgx footer {
+                padding-bottom: calc(24px + env(safe-area-inset-bottom)) !important;
+            }
+
+            /* Smaller copy buttons on mobile */
+            body.theme-mgx #btnCopyLyrics,
+            body.theme-mgx #btnCopyTags {
+                padding: 4px 8px !important;
+                font-size: var(--text-xs) !important;
+            }
+
+            body.theme-mgx #btnCopyLyrics i,
+            body.theme-mgx #btnCopyTags i {
+                width: 12px !important;
+                height: 12px !important;
+            }
+        }
+
+        /* ========================================
+           CUSTOM SCROLLBAR - P3 UPGRADE
+           ======================================== */
+
+        /* Default theme scrollbar (Dark) */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3f3f46;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #52525b;
+        }
+
+        /* MGX theme scrollbar (Light) */
+        body.theme-mgx ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        body.theme-mgx ::-webkit-scrollbar-track {
+            background: var(--mgx-gray-50);
+            border-radius: 3px;
+        }
+
+        body.theme-mgx ::-webkit-scrollbar-thumb {
+            background: var(--mgx-gray-300);
+            border-radius: 3px;
+            transition: background var(--duration-fast) var(--ease-out);
+        }
+
+        body.theme-mgx ::-webkit-scrollbar-thumb:hover {
+            background: var(--mgx-gray-400);
+        }
+
+        body.theme-mgx ::-webkit-scrollbar-thumb:active {
+            background: var(--mgx-gray-500);
+        }
+
+        /* ========================================
+           KEYBOARD SHORTCUT TOOLTIP - P3 UPGRADE
+           ======================================== */
+
+        /* Tooltip container */
+        [data-kbd] {
+            position: relative;
+        }
+
+        /* Tooltip content */
+        [data-kbd]::after {
+            content: attr(data-kbd);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-4px);
+            padding: 4px 8px;
+            background: var(--mgx-gray-900);
+            color: var(--mgx-white);
+            font-size: 11px;
+            font-weight: 500;
+            white-space: nowrap;
+            border-radius: 4px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 150ms cubic-bezier(0, 0, 0.2, 1);
+            z-index: 1000;
+        }
+
+        /* Tooltip arrow */
+        [data-kbd]::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(0);
+            border: 4px solid transparent;
+            border-top-color: var(--mgx-gray-900);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 150ms cubic-bezier(0, 0, 0.2, 1);
+            z-index: 1000;
+        }
+
+        /* Show tooltip on hover */
+        [data-kbd]:hover::after,
+        [data-kbd]:hover::before {
+            opacity: 1;
+        }
+
+        [data-kbd]:hover::after {
+            transform: translateX(-50%) translateY(-8px);
+        }
+
+        [data-kbd]:hover::before {
+            transform: translateX(-50%) translateY(-4px);
+        }
+
+        /* MGX theme tooltip variant */
+        body.theme-mgx [data-kbd]::after {
+            background: var(--mgx-gray-800);
+            box-shadow: var(--shadow-md);
+        }
+
+        body.theme-mgx [data-kbd]::before {
+            border-top-color: var(--mgx-gray-800);
+        }
+
+        /* Modern Range Slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
+            background: #d946ef;
+            cursor: pointer;
+            margin-top: -4px;
+            box-shadow: 0 0 0 2px #09090b;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            background: #3f3f46;
+            border-radius: 2px;
+        }
+
+        /* Buttons */
+        .daw-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .daw-btn:active {
+            transform: scale(0.98);
+        }
+
+        .daw-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Chips & Pills */
+        .chip-base {
+            transition: all 0.2s ease;
+            font-size: 11px;
+            font-weight: 500;
+            border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chip-active {
+            background-color: rgba(217, 70, 239, 0.15);
+            color: #f0abfc;
+            border-color: rgba(217, 70, 239, 0.3);
+            box-shadow: 0 0 10px rgba(217, 70, 239, 0.1);
+        }
+
+        .chip-inactive {
+            background-color: rgba(255, 255, 255, 0.03);
+            color: #a1a1aa;
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .chip-inactive:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            color: #e4e4e7;
+        }
+
+        /* Lyric Editor - Strict Line Display */
+        .lyric-line {
+            padding: 1px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            position: relative;
+            line-height: 1.4;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-weight: 500;
+            font-size: 1.1rem;
+            letter-spacing: 0.02em;
+            color: #e4e4e7;
+            margin-bottom: 2px;
+            white-space: pre-wrap;
+            word-break: keep-all;
+            overflow-wrap: break-word;
+        }
+
+        .lyric-line:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .lyric-line:focus {
+            outline: none;
+            background: rgba(217, 70, 239, 0.1);
+            border-left: 2px solid #d946ef;
+        }
+
+        .lyric-block {
+            padding-left: 1rem;
+            border-left-width: 2px;
+            border-color: rgba(255, 255, 255, 0.05);
+            margin-bottom: 0.75rem;
+        }
+
+        /* Special Sections in Editor */
+        .chords-display {
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fbbf24;
+            /* Amber */
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .suno-separator {
+            border: 0;
+            height: 1px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+            margin: 40px 0 20px 0;
+        }
+
+        .suno-tags-display {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(217, 70, 239, 0.2);
+            color: #c084fc;
+            /* Purple */
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            padding: 15px;
+            border-radius: 8px;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        /* Layout */
+        .sidebar-scroll-area {
+            height: calc(100vh - 12rem);
+        }
+
+        @media (max-width: 768px) {
+            #mainSidebar {
+                top: 0;
+                bottom: 0;
+                height: 100%;
+                z-index: 50;
+            }
+
+            .sidebar-scroll-area {
+                height: calc(100vh - 7rem);
+            }
+        }
+
+        /* Loader */
+        .loader {
+            width: 14px;
+            height: 14px;
+            border: 2px solid #FFF;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+
+        @keyframes rotation {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* --- Border Animation (Flowing Light) --- */
+        .editor-container {
+            position: relative;
+            z-index: 0;
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s;
+            overflow: hidden;
+        }
+
+        @keyframes border-breathe {
+            0% {
+                border-color: rgba(217, 70, 239, 0.3);
+                box-shadow: 0 0 0 rgba(217, 70, 239, 0);
+            }
+
+            50% {
+                border-color: rgba(217, 70, 239, 0.8);
+                box-shadow: 0 0 15px rgba(217, 70, 239, 0.2);
+            }
+
+            100% {
+                border-color: rgba(217, 70, 239, 0.3);
+                box-shadow: 0 0 0 rgba(217, 70, 239, 0);
+            }
+        }
+
+        @keyframes scanline-move {
+            0% {
+                top: -10%;
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                top: 110%;
+                opacity: 0;
+            }
+        }
+
+        .editor-container.generating {
+            animation: border-breathe 2s infinite ease-in-out;
+        }
+
+        .editor-container.generating::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, #d946ef 50%, transparent 100%);
+            box-shadow: 0 0 8px #d946ef;
+            animation: scanline-move 2.5s linear infinite;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* --- Visualizer Ring --- */
+        #visualizerRing {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(220, 38, 38, 0.4) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+            width: 100px;
+            height: 100px;
+            opacity: 0;
+            transition: opacity 0.1s;
+        }
+
+        /* --- Suno Player --- */
+        .suno-player {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 8px;
+        }
+
+        /* Auth Modal Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+    </style>
+</head>
+
+<body class="flex flex-col select-none bg-daw-bg text-daw-text">
+
+    <!-- Mobile Backdrop -->
+    <div id="mobileBackdrop"
+        class="fixed inset-0 bg-black/80 z-40 hidden backdrop-blur-sm transition-opacity opacity-0"></div>
+
+    <!-- Header -->
+    <header class="h-14 bg-daw-bg border-b border-white/5 flex items-center justify-between px-4 shrink-0 z-30">
+        <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2.5">
+                <div
+                    class="w-7 h-7 bg-gradient-to-br from-fuchsia-600 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-xs shadow-lg shadow-fuchsia-900/20">
+                    LS</div>
+                <div class="flex flex-col leading-none">
+                    <span class="font-bold text-gray-100 tracking-tight">LyricStudio</span>
+                    <span class="text-[9px] text-fuchsia-500/80 font-mono mt-0.5">PRO v9.9.9.9.9.9.6</span>
+                </div>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <div id="trialBadge" class="text-[10px] bg-white/10 px-2 py-1 rounded text-gray-400 font-mono">
+                试用: <span id="trialCountDisplay">0</span>/3
+            </div>
+            <!-- Audio Settings Button -->
+            <button id="btnThemeToggle" type="button"
+                class="text-gray-400 hover:text-fuchsia-500 transition-colors p-2 rounded-lg hover:bg-white/5 mr-1"
+                title="Switch Theme">
+                <i data-lucide="moon" class="w-5 h-5"></i>
+            </button>
+
+            <button id="btnAudioSettings" type="button"
+                class="text-gray-400 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/5" title="音频设置">
+                <i data-lucide="settings" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Flex container for Sidebar and Main content -->
+    <div class="flex-1 flex overflow-hidden relative">
+        <!-- Sidebar -->
+        <aside id="mainSidebar"
+            class="w-80 bg-[#09090b] border-r border-white/5 flex flex-col shrink-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300 absolute md:static h-full shadow-2xl md:shadow-none z-40">
+
+            <!-- Mobile Close -->
+            <div class="md:hidden h-12 flex items-center justify-end px-4 border-b border-white/10">
+                <button id="btnCloseSidebar" type="button" class="text-gray-400 hover:text-white transition-colors"><i
+                        data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+
+            <div class="p-5 space-y-7 overflow-y-auto custom-scroll sidebar-scroll-area">
+
+                <!-- 1. Topic -->
+                <div class="space-y-2.5">
+                    <div class="flex items-center gap-2 text-fuchsia-400/90 pl-1">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                        <label class="text-[11px] font-bold tracking-wide uppercase">创意核心 (Core Prompt)</label>
+                    </div>
+                    <div class="relative group">
+                        <textarea id="inputTopic"
+                            class="w-full bg-white/[0.03] border border-white/10 rounded-2xl p-4 text-sm focus:outline-none focus:ring-1 focus:ring-fuchsia-500/50 focus:border-fuchsia-500/50 focus:bg-white/[0.05] transition-all resize-none h-24 placeholder-gray-600 leading-relaxed shadow-inner"
+                            placeholder="描述你的歌曲主题、故事或画面感...&#10;例：赛博朋克城市的雨夜，失恋的侦探..."></textarea>
+                    </div>
+                </div>
+
+                <!-- 1.1 Artist -->
+                <div class="space-y-2.5">
+                    <div class="flex items-center gap-2 text-fuchsia-400/90 pl-1">
+                        <i data-lucide="mic-2" class="w-3.5 h-3.5"></i>
+                        <label class="text-[11px] font-bold tracking-wide uppercase">参考艺术家 (Artist)</label>
+                    </div>
+                    <div class="relative group">
+                        <input id="inputArtist"
+                            class="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-fuchsia-500/50 focus:border-fuchsia-500/50 transition-all placeholder-gray-600"
+                            placeholder="例如：周杰伦、Taylor Swift...">
+                    </div>
+                </div>
+
+                <!-- 2. Vibe Selection -->
+                <div class="space-y-2.5">
+                    <div class="flex items-center justify-between px-1">
+                        <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">情感基调 (Vibe)</label>
+                    </div>
+                    <!-- Single Select Group -->
+                    <div class="grid grid-cols-3 gap-2" id="vibeContainer">
+                        <!-- JS Generated -->
+                    </div>
+
+                    <!-- Smooth Button -->
+                    <button id="btnVibeSmooth" type="button"
+                        class="w-full mt-2 py-2.5 rounded-xl border transition-all text-xs font-bold flex items-center justify-center gap-2 shadow-md">
+                        <i data-lucide="wind" class="w-3.5 h-3.5"></i> 顺畅 (Smooth Flow)
+                    </button>
+                </div>
+
+                <!-- 3. Parameters Group -->
+                <div class="space-y-3 bg-white/[0.02] rounded-2xl p-4 border border-white/5">
+                    <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">生成参数
+                        (Parameters)</label>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <!-- Style -->
+                        <div class="space-y-1.5">
+                            <span class="text-[10px] text-gray-400 ml-1">风格</span>
+                            <div class="relative">
+                                <select id="selStyle"
+                                    class="w-full appearance-none bg-black/20 border border-white/10 rounded-xl px-3 py-2 text-[11px] focus:outline-none focus:border-fuchsia-500/50 transition-colors cursor-pointer hover:bg-white/5 text-gray-300">
+                                    <option value="Pop" selected>流行 (Pop)</option>
+                                    <option value="Rock Ballad">摇滚情歌</option>
+                                    <option value="Hard Rock">硬摇滚</option>
+                                    <option value="Folk">民谣</option>
+                                    <option value="Rap">说唱</option>
+                                    <option value="Ancient">中国风</option>
+                                    <option value="R&B">R&B</option>
+                                    <option value="Jazz">爵士</option>
+                                    <option value="Blues">布鲁斯</option>
+                                    <option value="Metal">金属</option>
+                                    <option value="Punk">朋克</option>
+                                    <option value="EDM">电子</option>
+                                    <option value="Country">乡村</option>
+                                </select>
+                                <i data-lucide="chevron-down"
+                                    class="absolute right-2.5 top-2.5 w-3.5 h-3.5 text-gray-600 pointer-events-none"></i>
+                            </div>
+                        </div>
+                        <!-- Rhyme Scheme -->
+                        <div class="space-y-1.5">
+                            <span class="text-[10px] text-gray-400 ml-1">韵脚结构</span>
+                            <div class="relative">
+                                <select id="selRhyme"
+                                    class="w-full appearance-none bg-black/20 border border-white/10 rounded-xl px-3 py-2 text-[11px] focus:outline-none focus:border-fuchsia-500/50 transition-colors cursor-pointer hover:bg-white/5 text-gray-300">
+                                    <option value="AAAA" selected>AAAA 通押 (默认)</option>
+                                    <option value="XAXA">XAXA 偶数押</option>
+                                    <option value="AABB">AABB 随韵</option>
+                                    <option value="ABAB">ABAB 交叉押</option>
+                                    <option value="AAXA">AAXA 抱韵</option>
+                                    <option value="Casual">随意 (Casual)</option>
+                                </select>
+                                <i data-lucide="chevron-down"
+                                    class="absolute right-2.5 top-2.5 w-3.5 h-3.5 text-gray-600 pointer-events-none"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 pt-1">
+                        <!-- Target Rhyme -->
+                        <div class="space-y-1.5">
+                            <span class="text-[10px] text-gray-400 ml-1">指定韵母</span>
+                            <div class="relative">
+                                <select id="selRhymeGroup"
+                                    class="w-full appearance-none bg-black/20 border border-white/10 rounded-xl px-3 py-2 text-[11px] focus:outline-none focus:border-fuchsia-500/50 transition-colors cursor-pointer hover:bg-white/5 text-gray-300">
+                                    <option value="Random">随机/AI决定</option>
+                                    <option value="a">a (啊/家)</option>
+                                    <option value="o">o (哦/波)</option>
+                                    <option value="e">e (鹅/车)</option>
+                                    <option value="i">i (衣/离)</option>
+                                    <option value="u">u (乌/路)</option>
+                                    <option value="v">v (鱼/雨)</option>
+                                    <option value="ai">ai (爱/来)</option>
+                                    <option value="ei">ei (飞/谁)</option>
+                                    <option value="ao">ao (奥/高)</option>
+                                    <option value="ou">ou (欧/手)</option>
+                                    <option value="an">an (安/天)</option>
+                                    <option value="en">en (恩/真)</option>
+                                    <option value="ang">ang (昂/光)</option>
+                                    <option value="eng">eng (亨/生)</option>
+                                    <option value="ong">ong (轰/红)</option>
+                                </select>
+                                <i data-lucide="chevron-down"
+                                    class="absolute right-2.5 top-2.5 w-3.5 h-3.5 text-gray-600 pointer-events-none"></i>
+                            </div>
+                        </div>
+                        <!-- Length -->
+                        <div class="space-y-1.5">
+                            <span class="text-[10px] text-gray-400 ml-1">单句字数</span>
+                            <div class="relative">
+                                <select id="selLength"
+                                    class="w-full appearance-none bg-black/20 border border-white/10 rounded-xl px-3 py-2 text-[11px] focus:outline-none focus:border-fuchsia-500/50 transition-colors cursor-pointer hover:bg-white/5 text-gray-300">
+                                    <option value="7-9" selected>7-9 字 (默认)</option>
+                                    <option value="Random">随意 (Free)</option>
+                                    <option value="6+6+9">6+6+9 (结构化)</option>
+                                    <option value="6+6+10">6+6+10 (结构化)</option>
+                                    <option value="6">6 字</option>
+                                    <option value="7">7 字</option>
+                                    <option value="8">8 字</option>
+                                    <option value="9">9 字</option>
+                                    <option value="10">10 字</option>
+                                    <option value="11">11 字</option>
+                                    <option value="12">12 字</option>
+                                    <option value="8-10">8-10 字 (弹性)</option>
+                                    <option value="10-12">10-12 字 (弹性)</option>
+                                </select>
+                                <i data-lucide="chevron-down"
+                                    class="absolute right-2.5 top-2.5 w-3.5 h-3.5 text-gray-600 pointer-events-none"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions (Floating Bottom) -->
+            <div class="p-5 pt-0 mt-auto space-y-3 bg-[#09090b] z-50">
+                <button id="btnGenerate" type="button" data-kbd="⌘G 生成"
+                    class="group w-full relative overflow-hidden rounded-xl bg-gradient-to-r from-fuchsia-600 to-purple-600 p-[1px] focus:outline-none focus:ring-2 focus:ring-fuchsia-500/50 shadow-lg shadow-fuchsia-900/30 transition-transform active:scale-[0.98]">
+                    <div
+                        class="relative bg-black/10 group-hover:bg-transparent transition-colors rounded-xl h-full px-4 py-3.5 flex items-center justify-center gap-2.5">
+                        <i data-lucide="sparkles" class="w-4 h-4 text-white/90 group-hover:animate-spin-slow"></i>
+                        <span class="font-bold text-white tracking-wide text-xs">生成歌词 (AI Lyrics)</span>
+                    </div>
+                </button>
+                <button id="btnSunoPanel" type="button"
+                    class="w-full py-3 text-[11px] font-bold text-fuchsia-400 hover:text-white hover:bg-fuchsia-600/20 transition-all flex items-center justify-center gap-2 rounded-xl border border-fuchsia-500/20">
+                    <i data-lucide="music-4" class="w-4 h-4"></i> Suno Studio (v5 Music)
+                </button>
+                <button id="btnViewPrompt" type="button"
+                    class="w-full py-2 text-[10px] text-gray-600 hover:text-gray-400 transition-colors">
+                    查看 Prompt
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Editor -->
+        <main class="flex-1 relative flex flex-col w-full md:ml-0 h-full bg-daw-bg">
+            <!-- Editor Toolbar -->
+            <div
+                class="h-12 border-b border-white/5 flex items-center justify-between px-6 bg-daw-bg/50 z-10 backdrop-blur-sm">
+                <div class="flex gap-2 w-full">
+                    <button id="btnMobileMenu" type="button" class="md:hidden text-gray-400 hover:text-white mr-2"
+                        aria-label="打开菜单"><i data-lucide="menu" class="w-5 h-5"></i></button>
+                    <button id="btnUndo" type="button" data-kbd="⌘Z 撤销"
+                        class="text-gray-500 hover:text-white disabled:opacity-30 p-1.5 rounded-lg hover:bg-white/5 transition-colors"
+                        title="返回上一步" aria-label="撤销"><i data-lucide="undo-2" class="w-4 h-4"></i></button>
+                    <div class="w-px h-5 bg-white/10 mx-1 self-center"></div>
+                    <!-- New Copy Buttons -->
+                    <button id="btnCopyLyrics" type="button" data-kbd="⌘C 复制"
+                        class="text-gray-400 hover:text-white text-[11px] flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors border border-white/5"
+                        aria-label="复制歌词到剪贴板"><i data-lucide="file-text" class="w-3.5 h-3.5"></i> 复制歌词</button>
+                    <button id="btnCopyTags" type="button" data-kbd="⌘⇧C 复制"
+                        class="text-fuchsia-500 hover:text-fuchsia-400 text-[11px] flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-fuchsia-500/10 transition-colors border border-fuchsia-500/20"
+                        aria-label="复制Suno风格标签"><i data-lucide="music" class="w-3.5 h-3.5"></i> 复制风格</button>
+                </div>
+            </div>
+
+            <!-- Content Area with Border Animation -->
+            <div id="editorScroll" class="flex-1 overflow-y-auto p-4 md:p-10 custom-scroll pb-32">
+                <!-- WRAPPER FOR BORDER ANIMATION -->
+                <div id="editorWrapper" class="editor-container min-h-[500px] w-full max-w-3xl mx-auto p-4 md:p-8">
+                    <div id="lyricsEditor"
+                        class="w-full h-full outline-none space-y-2 font-sans text-lg tracking-wide text-gray-300 select-text leading-relaxed"
+                        contenteditable="false">
+                        <!-- Manual Content -->
+                        <div class="p-6 bg-white/5 rounded-2xl border border-white/10 space-y-4">
+                            <div class="flex items-center gap-2 text-fuchsia-500 mb-2">
+                                <i data-lucide="book-open" class="w-5 h-5"></i>
+                                <h2 class="text-lg font-bold">LyricStudio 使用说明书</h2>
+                            </div>
+
+                            <div class="space-y-3 text-sm text-gray-300 leading-relaxed">
+                                <div class="flex gap-3">
+                                    <span class="text-fuchsia-400 font-bold shrink-0">01. 创意核心</span>
+                                    <p>在左侧“创意核心”输入框中，写下您想创作的歌曲主题、故事背景或具体画面感。</p>
+                                </div>
+
+                                <div class="flex gap-3">
+                                    <span class="text-fuchsia-400 font-bold shrink-0">02. 艺术家风格</span>
+                                    <p>在左侧输入歌手（如周杰伦），AI 将自动生成该风格的歌词及 Suno 提示词。</p>
+                                </div>
+
+                                <div class="flex gap-3">
+                                    <span class="text-fuchsia-400 font-bold shrink-0">03. 结构重组</span>
+                                    <p>自动生成完整结构（前奏-主歌-副歌-间奏...尾奏）。间奏后自动填充重复段落，无需AI消耗。</p>
+                                </div>
+
+                                <div class="flex gap-3">
+                                    <span class="text-fuchsia-400 font-bold shrink-0">04. 试用限制</span>
+                                    <p>注册登录后，免费版包含 <span class="text-white font-bold">3次</span>
+                                        完整生成机会。试用结束后请付费解锁 PRO 版。</p>
+                                </div>
+
+                                <div class="flex gap-3">
+                                    <span class="text-fuchsia-400 font-bold shrink-0">05. Suno Studio</span>
+                                    <p>新增 <strong>Suno v5</strong> 音乐生成。录制一段音频作为灵感，结合歌词和风格，自动生成并下载 MP3。</p>
+                                </div>
+
+                                <div class="flex gap-3">
+                                    <span class="text-fuchsia-400 font-bold shrink-0">06. 版本更新</span>
+                                    <div class="text-gray-400 space-y-1">
+                                        <p><span class="text-gray-300">v9.9.9.9.9.9.6:</span> 修复自动下载导致的页面刷新问题，改用 Blob
+                                            方式下载。</p>
+                                        <p><span class="text-gray-300">v9.9.9.9.9.9.5:</span> 修复 Suno 404 错误。使用
+                                            audio_prompt_id 替代 cover_clip_id 以支持 v5 模型。</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 pt-4 border-t border-white/10 text-center text-xs text-gray-500">
+                                点击左侧 <span class="text-fuchsia-500 font-bold">生成歌词</span> 按钮开始创作
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer Transport (Optimized Layout) -->
+    <footer
+        class="bg-[#09090b] border-t border-white/5 flex items-center justify-between px-2 md:px-6 shrink-0 z-50 pt-3 pb-6 md:pb-8">
+
+        <!-- Left: Spacing -->
+        <div class="flex-1"></div>
+
+        <!-- Center: Record with Visualizer -->
+        <div class="flex flex-col items-center justify-center shrink-0 mx-2 relative -top-3 z-20">
+            <!-- Visualizer Ring -->
+            <div id="visualizerRing"></div>
+            <!-- Main Button -->
+            <button id="btnRecord" type="button"
+                class="w-16 h-16 rounded-full bg-[#18181b] border border-white/10 flex items-center justify-center hover:border-gray-500 transition-all active:scale-95 shadow-2xl shadow-black relative z-10">
+                <div id="recDot" class="w-5 h-5 rounded-full bg-red-600 transition-all"></div>
+            </button>
+            <div id="timeDisplay"
+                class="text-[10px] font-mono text-gray-500 mt-2 bg-black/30 px-2 py-0.5 rounded-full z-20">00:00</div>
+        </div>
+
+        <!-- Right: Playback -->
+        <div class="flex items-center justify-end gap-1 md:gap-3 flex-1">
+            <button id="btnPlay" type="button" disabled
+                class="p-1.5 md:p-2 text-gray-400 hover:text-white disabled:opacity-30 transition-colors"><i
+                    data-lucide="play" class="w-5 h-5"></i></button>
+            <button id="btnStop" type="button" disabled
+                class="p-1.5 md:p-2 text-gray-400 hover:text-white disabled:opacity-30 transition-colors"><i
+                    data-lucide="square" class="w-4 h-4"></i></button>
+            <div class="w-px h-4 bg-white/10 mx-1"></div>
+            <button id="btnDownload" type="button" disabled
+                class="p-1.5 md:p-2 text-fuchsia-500 hover:text-fuchsia-300 disabled:opacity-30 transition-colors"><i
+                    data-lucide="download" class="w-5 h-5"></i></button>
+            <audio id="audioPreview" class="hidden"></audio>
+        </div>
+    </footer>
+
+    <!-- Audio Settings Modal (True Channel Probe) -->
+    <div id="audioSettingsModal"
+        class="fixed inset-0 bg-black/90 z-[100] hidden flex items-center justify-center backdrop-blur-md px-4">
+        <div class="bg-[#18181b] border border-white/10 rounded-2xl shadow-2xl p-6 w-full max-w-sm relative">
+            <button id="btnCloseAudioSettings" type="button"
+                class="absolute top-4 right-4 text-gray-400 hover:text-white"><i data-lucide="x"
+                    class="w-5 h-5"></i></button>
+            <h2 class="text-lg font-bold text-gray-100 mb-6 flex items-center gap-2"><i data-lucide="mic"
+                    class="w-5 h-5 text-fuchsia-500"></i> 音频设置</h2>
+
+            <div class="space-y-4">
+                <div class="space-y-1">
+                    <label class="block text-xs font-bold text-gray-400 uppercase">输入设备 (Input Device)</label>
+                    <select id="audioInputSelect"
+                        class="w-full bg-black/40 border border-white/20 rounded-xl p-2.5 text-sm text-white focus:border-fuchsia-500 outline-none">
+                        <option value="">加载中...</option>
+                    </select>
+                    <button id="btnRefreshDevices" type="button"
+                        class="text-[10px] text-fuchsia-400 mt-1 hover:text-white underline">刷新设备列表</button>
+                </div>
+
+                <div class="space-y-1">
+                    <label class="block text-xs font-bold text-gray-400 uppercase">选择输入通道 (Mono)</label>
+                    <!-- Dynamic Channel Menu -->
+                    <select id="audioChannelSelect"
+                        class="w-full bg-black/40 border border-white/20 rounded-xl p-2.5 text-sm text-white focus:border-fuchsia-500 outline-none">
+                        <option value="1">通道 1 (默认)</option>
+                    </select>
+                    <p id="channelInfoText" class="text-[10px] text-gray-500 mt-1">请选择设备以探测硬件通道...</p>
+                </div>
+            </div>
+
+            <button id="btnSaveAudioSettings" type="button"
+                class="w-full mt-6 bg-fuchsia-600 hover:bg-fuchsia-500 text-white py-2.5 rounded-xl font-bold text-xs transition-colors">确认保存</button>
+        </div>
+    </div>
+
+    <!-- Suno API Key Modal (NEW) -->
+    <div id="sunoKeyModal"
+        class="fixed inset-0 bg-black/90 z-[110] hidden flex items-center justify-center backdrop-blur-md px-4">
+        <div class="bg-[#18181b] border border-white/10 rounded-2xl shadow-2xl p-6 w-full max-w-sm relative">
+            <button id="btnCloseSunoKey" type="button" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i
+                    data-lucide="x" class="w-5 h-5"></i></button>
+            <h2 class="text-lg font-bold text-gray-100 mb-2 flex items-center gap-2">
+                <i data-lucide="key" class="w-5 h-5 text-fuchsia-500"></i> 输入 Suno API Key
+            </h2>
+            <p class="text-xs text-gray-400 mb-6">请输入 OpenAI-HK 的 API Key 以使用音乐生成服务。</p>
+
+            <input type="text" id="sunoKeyInput"
+                class="w-full bg-black/40 border border-white/20 rounded-xl p-3 outline-none text-center font-mono text-xs text-white mb-4 placeholder-gray-600 focus:border-fuchsia-500 transition-all"
+                placeholder="hk-xxxxxxxx...">
+
+            <button id="btnSaveSunoKey" type="button"
+                class="bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-500 hover:to-purple-500 text-white px-6 py-2.5 rounded-xl font-bold text-xs w-full transition-all shadow-lg shadow-fuchsia-900/30">
+                确认并进入 Studio
+            </button>
+
+            <p class="text-[10px] text-center text-gray-600 mt-3">Key 仅保存在本地内存中，刷新后需重新输入。</p>
+        </div>
+    </div>
+
+    <!-- Suno Studio Modal -->
+    <div id="sunoModal"
+        class="fixed inset-0 bg-black/95 z-[90] hidden flex items-center justify-center backdrop-blur-xl p-4">
+        <div
+            class="bg-[#18181b] border border-white/10 rounded-2xl shadow-2xl p-6 w-full max-w-2xl h-[90vh] flex flex-col relative">
+            <button id="btnCloseSuno" type="button" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i
+                    data-lucide="x" class="w-5 h-5"></i></button>
+
+            <div class="flex items-center gap-3 mb-6 border-b border-white/5 pb-4">
+                <div
+                    class="w-10 h-10 rounded-full bg-gradient-to-br from-fuchsia-600 to-purple-600 flex items-center justify-center shadow-lg shadow-fuchsia-500/20">
+                    <i data-lucide="music-4" class="w-5 h-5 text-white"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-gray-100">Suno Studio v5 (Inspire Mode)</h2>
+                    <p class="text-xs text-fuchsia-400 font-mono">Text-to-Music Generation</p>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto custom-scroll space-y-6 pr-2">
+                <!-- Step 0: Audio Input Status -->
+                <div class="bg-white/5 rounded-xl p-4 border border-white/5">
+                    <h3 class="text-xs font-bold text-gray-400 uppercase mb-2">音频参考 (Audio Reference)</h3>
+                    <div id="sunoAudioStatus" class="text-xs text-gray-500 italic">未检测到录音</div>
+                </div>
+
+                <!-- Step 1: Check Content -->
+                <div class="bg-white/5 rounded-xl p-4 border border-white/5">
+                    <h3 class="text-xs font-bold text-gray-400 uppercase mb-3 flex items-center gap-2">
+                        <span
+                            class="w-4 h-4 rounded-full bg-gray-700 text-white flex items-center justify-center text-[9px]">1</span>
+                        文本内容 (Context)
+                    </h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-[10px] text-gray-500">风格 (Tags)</label>
+                            <div id="sunoTagsPreview" class="text-xs text-fuchsia-300 font-mono mt-1 truncate">Wait for
+                                gen...</div>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500">歌词预览 (Lyrics)</label>
+                            <div id="sunoLyricsPreview" class="text-xs text-gray-300 mt-1 truncate">Wait for gen...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Action -->
+                <button id="btnSunoAction" type="button"
+                    class="w-full bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-500 hover:to-purple-500 text-white py-4 rounded-xl font-bold text-sm shadow-lg shadow-fuchsia-900/40 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="zap" class="w-4 h-4"></i> 开始生成 (Generate v5)
+                </button>
+
+                <!-- Step 4: Results -->
+                <div id="sunoResults" class="space-y-3 hidden">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xs font-bold text-gray-400 uppercase">生成结果 (Results)</h3>
+                        <span id="sunoStatusText"
+                            class="text-[10px] text-fuchsia-500 animate-pulse">Processing...</span>
+                    </div>
+                    <!-- Player A -->
+                    <div id="playerA" class="suno-player hidden">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-white">Clip A</span>
+                            <button type="button"
+                                class="text-[10px] bg-fuchsia-600/20 text-fuchsia-400 px-2 py-1 rounded hover:bg-fuchsia-600 hover:text-white transition-colors"
+                                onclick="SunoService.download('A')">下载 MP3</button>
+                        </div>
+                        <audio controls class="w-full h-8" id="audioA"></audio>
+                    </div>
+                    <!-- Player B -->
+                    <div id="playerB" class="suno-player hidden">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-white">Clip B</span>
+                            <button type="button"
+                                class="text-[10px] bg-fuchsia-600/20 text-fuchsia-400 px-2 py-1 rounded hover:bg-fuchsia-600 hover:text-white transition-colors"
+                                onclick="SunoService.download('B')">下载 MP3</button>
+                        </div>
+                        <audio controls class="w-full h-8" id="audioB"></audio>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Modal -->
+    <div id="passwordModal"
+        class="fixed inset-0 bg-black/90 z-[100] hidden flex items-center justify-center backdrop-blur-md px-4">
+        <div
+            class="bg-[#18181b] border border-white/10 rounded-2xl shadow-2xl p-8 w-full max-w-sm text-center relative">
+            <div class="mb-4 text-fuchsia-500 flex justify-center">
+                <i data-lucide="lock" class="w-10 h-10"></i>
+            </div>
+            <h2 class="text-xl font-bold text-gray-100 mb-2">试用次数已耗尽</h2>
+            <p class="text-sm text-gray-400 mb-6 leading-relaxed">您的 1 次免费试用已结束。<br>请输入卡密继续使用。</p>
+
+            <!-- Payment Option -->
+            <div id="paymentSection" class="mb-6">
+                <button id="btnPay" type="button"
+                    class="w-full bg-[#00c800] hover:bg-[#00b300] text-white px-6 py-3 rounded-xl font-bold text-sm transition-all shadow-lg flex items-center justify-center gap-2 mb-3">
+                    <i data-lucide="credit-card" class="w-4 h-4"></i>
+                    在线支付解锁 (¥9.9)
+                </button>
+                <div id="paymentInfo" class="hidden space-y-3">
+                    <div id="qrcodeContainer"
+                        class="bg-white p-2 rounded-lg mx-auto w-32 h-32 flex items-center justify-center">
+                        <!-- QRCode will be injected here or generic loading -->
+                        <div class="loader border-gray-300 border-t-fuchsia-500"></div>
+                    </div>
+                    <p class="text-[10px] text-gray-400">支付后请稍等或点击下方按钮</p>
+                    <div class="flex gap-2">
+                        <a id="linkPayJump" href="#" target="_blank"
+                            class="flex-1 text-[10px] border border-white/20 rounded-lg py-2 hover:bg-white/5 transition-colors">跳转支付</a>
+                        <button id="btnCheckPay" type="button"
+                            class="flex-1 text-[10px] bg-fuchsia-600/20 text-fuchsia-400 border border-fuchsia-500/20 rounded-lg py-2 hover:bg-fuchsia-600/30 transition-colors">
+                            我已支付
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Auth Modal moved to root -->
+
+            <div class="relative py-2">
+                <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                    <div class="w-full border-t border-white/10"></div>
+                </div>
+                <div class="relative flex justify-center text-xs uppercase">
+                    <span class="bg-[#18181b] px-2 text-gray-500">Or use Code</span>
+                </div>
+            </div>
+
+            <input type="text" id="unlockPasswordInput"
+                class="w-full bg-black/40 border border-white/20 rounded-xl p-3 outline-none text-center font-mono text-sm tracking-widest focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500 transition-all text-white mb-4 placeholder-gray-700"
+                placeholder="在此输入卡密...">
+
+            <button id="btnUnlock" type="button"
+                class="bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10 px-6 py-2.5 rounded-xl font-bold text-xs w-full transition-all">
+                卡密激活 (Activate)
+            </button>
+
+            <div id="unlockMsg"
+                class="text-xs text-red-400 mt-3 hidden font-bold flex items-center justify-center gap-1">
+                <i data-lucide="alert-circle" class="w-3 h-3"></i> 验证失败
+            </div>
+
+            <!-- Contact Info -->
+            <div class="mt-6 pt-4 border-t border-white/10">
+                <p class="text-[10px] text-gray-500 mb-1">遇到问题？联系客服获取帮助</p>
+                <p class="text-sm font-bold text-fuchsia-400 font-mono flex items-center justify-center gap-2">
+                    <i data-lucide="message-circle" class="w-3 h-3"></i> 客服QQ：2323214514
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Modal (Moved to Root) -->
+    <div id="authModal"
+        class="fixed inset-0 z-[60] bg-black/80 hidden flex items-center justify-center backdrop-blur-sm">
+        <div
+            class="glass-panel p-8 rounded-2xl w-96 border border-white/10 shadow-2xl animate-fade-in relative overflow-hidden">
+            <!-- Background Decoration -->
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-fuchsia-600/20 rounded-full blur-[50px]"></div>
+            <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-purple-600/20 rounded-full blur-[50px]"></div>
+
+            <div class="relative z-10 text-center">
+                <div
+                    class="w-16 h-16 bg-gradient-to-br from-fuchsia-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-fuchsia-500/20">
+                    <i data-lucide="user" class="w-8 h-8 text-white"></i>
+                </div>
+                <h2
+                    class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 mb-2">
+                    欢迎回来</h2>
+                <p id="authSubTitle" class="text-sm text-gray-400 mb-6">登录以同步您的 PRO 状态和试用额度</p>
+
+                <!-- Tabs -->
+                <div class="flex bg-white/5 p-1 rounded-lg mb-6">
+                    <button id="tabLogin"
+                        class="flex-1 py-1.5 text-sm rounded-md bg-white/10 text-white shadow transition-all">登录</button>
+                    <button id="tabRegister"
+                        class="flex-1 py-1.5 text-sm rounded-md text-gray-400 hover:text-white transition-all">注册</button>
+                </div>
+
+                <!-- Form -->
+                <div class="space-y-4 text-left">
+                    <div>
+                        <label
+                            class="text-[10px] uppercase tracking-wider text-gray-500 font-bold mb-1 block pl-1">用户名</label>
+                        <div class="relative group">
+                            <input type="text" id="authUsername"
+                                class="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-gray-200 focus:outline-none focus:border-fuchsia-500/50 focus:bg-white/5 transition-all placeholder-gray-600"
+                                placeholder="Username">
+                        </div>
+                    </div>
+                    <div>
+                        <label
+                            class="text-[10px] uppercase tracking-wider text-gray-500 font-bold mb-1 block pl-1">密码</label>
+                        <div class="relative group">
+                            <input type="password" id="authPassword"
+                                class="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-gray-200 focus:outline-none focus:border-fuchsia-500/50 focus:bg-white/5 transition-all placeholder-gray-600"
+                                placeholder="••••••••">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="authError" class="text-red-400 text-xs mt-3 hidden"></div>
+
+                <button id="btnAuthAction"
+                    class="w-full mt-6 bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-500 hover:to-purple-500 text-white font-bold py-2.5 rounded-lg shadow-lg shadow-fuchsia-500/20 active:scale-95 transition-all flex items-center justify-center gap-2 group">
+                    <span id="btnAuthText">立即登录</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                </button>
+
+                <button id="btnCloseAuth" class="mt-4 text-xs text-gray-500 hover:text-gray-300">暂不登录
+                    (仅预览)</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onerror = function (msg, url, line, col, error) {
+            alert("Script Error: " + msg + "\nLine: " + line);
+            console.error(msg, url, line, col, error);
+            return false;
+        };
+        console.log("Script starting...");
+
+        // --- Core Logic ---
+
+
+        class AppState {
+            constructor() {
+                // Initialize default state
+                this.vibe = { '接地气': 0, '伤感': 0, '下沉': 0, '高级': 0, '温柔': 0, '顺畅': 1 };
+                this.structure = { 'Verse 1': 1, 'Verse 2': 1, 'Pre': 0, 'Chorus 1': 1, 'Chorus 2': 1 };
+                this.user = null; // { id, username, trial_count, is_pro }
+                this.history = [];
+                this.historyIndex = -1;
+
+                this.config = { apiKey: 'fXJ8jn1mq4fY0PymaoHYelB21xaV7gx2IBCQ224aLlpvvMhT' }; // Lyrics API Key (Embedded)
+                this.sunoApiKey = ''; // Suno API Key (User Input)
+                this.lastPrompt = "";
+                this.lastLyricsText = "";
+                this.lastTags = "";
+                this.isShowingPrompt = false;
+
+                // Restore User from session if possible (pseudo-session via simple storage for demo)
+                // Secure apps would use httpOnly cookies. Here we store user object in LS for convenience in this prototype.
+                try {
+                    const savedUser = localStorage.getItem('lyricStudio_user');
+                    if (savedUser) this.user = JSON.parse(savedUser);
+                } catch (e) { console.error(e); }
+
+                this.savedContent = localStorage.getItem('lyricStudio_content_v99999');
+                this.updateTrialDisplay();
+            }
+
+            saveUser() {
+                if (this.user) {
+                    localStorage.setItem('lyricStudio_user', JSON.stringify(this.user));
+                } else {
+                    localStorage.removeItem('lyricStudio_user');
+                }
+                this.updateTrialDisplay();
+            }
+
+            saveContent(content) {
+                this.savedContent = content;
+                localStorage.setItem('lyricStudio_content_v99999', content);
+            }
+
+            logout() {
+                this.user = null;
+                this.saveUser();
+                window.location.reload();
+            }
+
+            updateTrialDisplay() {
+                const display = document.getElementById('trialCountDisplay');
+                const badge = document.getElementById('trialBadge');
+                const authBtn = document.getElementById('authBtnDisplay'); // We will add this ID to header
+
+                if (!this.user) {
+                    // Not logged in
+                    if (badge) badge.innerText = "未登录";
+                    if (display) display.innerText = "-";
+                    // Show login prompt triggers elsewhere
+                } else {
+                    if (this.user.is_pro) {
+                        if (badge) {
+                            badge.innerHTML = `<span class="text-fuchsia-400 font-bold">PRO版 (已激活)</span>`;
+                            badge.classList.remove('text-gray-400');
+                            badge.classList.add('bg-fuchsia-500/10', 'border', 'border-fuchsia-500/20');
+                        }
+                    } else {
+                        // Show remaining trials
+                        const remaining = Math.max(0, 3 - (this.user.trial_count || 0));
+                        if (display) display.innerText = remaining;
+                        if (badge) badge.innerText = "免费试用";
+                    }
+                }
+            }
+
+            async initiatePayment() {
+                if (!this.user) {
+                    UI.showAuthModal();
+                    return;
+                }
+                try {
+                    const btn = document.getElementById('btnPay');
+                    btn.disabled = true;
+                    btn.innerText = '创建订单中...';
+
+                    const res = await fetch('/api/create_order', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            amount: 9.9,
+                            title: 'LyricStudio Pro Unlock',
+                            user_id: this.user.id
+                        })
+                    });
+                    const data = await res.json();
+
+                    if (data.success) {
+                        this.currentOrderId = data.trade_order_id;
+                        document.getElementById('paymentInfo').classList.remove('hidden');
+                        document.getElementById('linkPayJump').href = data.payment_url;
+
+                        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(data.payment_url)}`;
+                        document.getElementById('qrcodeContainer').innerHTML = `<img src="${qrUrl}" class="w-full h-full rounded" alt="Scan to Pay">`;
+
+                        btn.innerText = '请扫码或点击跳转';
+
+                        // Start auto-check
+                        this.startPaymentCheck();
+                    } else {
+                        alert('订单创建失败: ' + (data.error || 'Unknown error'));
+                        btn.disabled = false;
+                        btn.innerText = '在线支付解锁 (¥9.9)';
+                    }
+                } catch (e) {
+                    console.error(e);
+                    alert('网络错误');
+                    document.getElementById('btnPay').disabled = false;
+                    document.getElementById('btnPay').innerText = '在线支付解锁 (¥9.9)';
+                }
+            }
+
+            startPaymentCheck() {
+                if (this.checkInterval) clearInterval(this.checkInterval);
+                this.checkInterval = setInterval(() => this.checkPaymentStatus(), 3000);
+            }
+
+            async checkPaymentStatus() {
+                if (!this.currentOrderId) return;
+                try {
+                    const res = await fetch(`/api/check_status?order_id=${this.currentOrderId}`);
+                    const data = await res.json();
+                    if (data.status === 'paid') {
+                        clearInterval(this.checkInterval);
+
+                        // Force refresh user profile to get is_pro = 1
+                        // For now we just mock updated state or re-login
+                        this.user.is_pro = 1;
+                        this.saveUser();
+
+                        this.updateTrialDisplay();
+                        alert('支付成功！已解锁 Pro 版');
+                        document.getElementById('passwordModal').classList.add('hidden');
+                    }
+                } catch (e) { console.warn('Check failed', e); }
+            }
+
+
+        } // End AppState
+        const state = new AppState();
+
+        // --- Audio Engine (True Channel Probe + Routing) ---
+        const AudioEngine = {
+            ctx: null, mic: null, processor: null, encoder: null,
+            isRecording: false, chunks: [], blob: null, startTime: 0,
+            analyser: null, dataArray: null, rafId: null,
+
+            selectedDeviceId: 'default',
+            selectedChannelIndex: 1, // 1-based index (UI) -> 0-based (API)
+
+            init() {
+                window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                this.ctx = new AudioContext();
+                this.enumerate();
+            },
+
+            enumerate() {
+                navigator.mediaDevices.enumerateDevices().then(this.gotDevices.bind(this));
+            },
+
+            gotDevices(deviceInfos) {
+                const select = document.getElementById('audioInputSelect');
+                if (!select) return;
+                const current = select.value;
+                select.innerHTML = '';
+
+                deviceInfos.forEach(deviceInfo => {
+                    if (deviceInfo.kind === 'audioinput') {
+                        const option = document.createElement('option');
+                        option.value = deviceInfo.deviceId;
+                        option.text = deviceInfo.label || `Microphone ${select.length + 1}`;
+                        select.appendChild(option);
+                    }
+                });
+
+                if (current) select.value = current;
+
+                select.onchange = () => { this.probeAudioDevice(select.value); };
+                if (select.length > 0 && !this.selectedDeviceId) {
+                    this.probeAudioDevice(select.value);
+                }
+            },
+
+            // TRUE PROBE: Open stream to check max channels
+            async probeAudioDevice(deviceId) {
+                const selectCh = document.getElementById('audioChannelSelect');
+                const infoText = document.getElementById('channelInfoText');
+
+                selectCh.innerHTML = '<option>正在探测...</option>';
+                selectCh.disabled = true;
+
+                try {
+                    // Request high channel count to see what we get
+                    const constraints = {
+                        audio: {
+                            deviceId: { exact: deviceId },
+                            channelCount: { ideal: 32 }, // Request max possible
+                            echoCancellation: false,
+                            autoGainControl: false,
+                            noiseSuppression: false
+                        }
+                    };
+
+                    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                    const track = stream.getAudioTracks()[0];
+                    const settings = track.getSettings();
+
+                    const maxChannels = settings.channelCount || 2;
+
+                    track.stop(); // Release immediately
+
+                    selectCh.innerHTML = '';
+                    selectCh.disabled = false;
+
+                    const limit = Math.min(maxChannels, 8);
+
+                    for (let i = 1; i <= limit; i++) {
+                        const opt = document.createElement('option');
+                        opt.value = i;
+                        opt.text = `通道 ${i}`;
+                        selectCh.appendChild(opt);
+                    }
+                    selectCh.value = "1"; // Default to ch 1
+
+                    infoText.innerText = `已检测到 ${maxChannels} 个输入通道。请选择单声道源。`;
+
+                } catch (e) {
+                    console.error("Probe failed", e);
+                    selectCh.innerHTML = '<option value="1">通道 1 (默认)</option>';
+                    selectCh.disabled = false;
+                    infoText.innerText = "无法探测通道，使用默认设置。";
+                }
+            },
+
+            async startRecord() {
+                if (!this.ctx) this.init(); if (this.ctx.state === 'suspended') await this.ctx.resume();
+                try {
+                    const reqChannels = Math.max(2, this.selectedChannelIndex + 1);
+
+                    const constraints = {
+                        audio: {
+                            deviceId: this.selectedDeviceId ? { exact: this.selectedDeviceId } : undefined,
+                            channelCount: { ideal: reqChannels, min: this.selectedChannelIndex },
+                            echoCancellation: false,
+                            autoGainControl: false,
+                            noiseSuppression: false,
+                            sampleRate: 44100
+                        }
+                    };
+
+                    const s = await navigator.mediaDevices.getUserMedia(constraints);
+                    const track = s.getAudioTracks()[0];
+                    const actualChannels = track.getSettings().channelCount || 1;
+
+                    const source = this.ctx.createMediaStreamSource(s);
+                    this.mic = source;
+
+                    // Splitting logic
+                    const splitter = this.ctx.createChannelSplitter(actualChannels);
+                    source.connect(splitter);
+
+                    let targetIndex = this.selectedChannelIndex - 1;
+                    if (targetIndex >= actualChannels) {
+                        targetIndex = 0;
+                    }
+
+                    // --- VISUALIZER (Mono Tap) ---
+                    this.analyser = this.ctx.createAnalyser();
+                    this.analyser.fftSize = 256;
+                    this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
+
+                    splitter.connect(this.analyser, targetIndex, 0);
+
+                    this.isRecording = true;
+                    this.updateLevel();
+
+                    // --- RECORDER (Mono Tap) ---
+                    this.processor = this.ctx.createScriptProcessor(4096, 1, 1);
+
+                    if (typeof lamejs === 'undefined') { alert("Audio Lib Loading..."); return; }
+                    this.encoder = new lamejs.Mp3Encoder(1, this.ctx.sampleRate, 128);
+                    this.chunks = [];
+
+                    this.processor.onaudioprocess = (e) => {
+                        if (!this.isRecording) return;
+                        const d = e.inputBuffer.getChannelData(0);
+                        const i16 = new Int16Array(d.length);
+                        for (let i = 0; i < d.length; i++) {
+                            const s = Math.max(-1, Math.min(1, d[i]));
+                            i16[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+                        }
+                        const b = this.encoder.encodeBuffer(i16);
+                        if (b.length > 0) this.chunks.push(b);
+                    };
+
+                    splitter.connect(this.processor, targetIndex, 0);
+
+                    const mute = this.ctx.createGain();
+                    mute.gain.value = 0;
+                    this.processor.connect(mute);
+                    mute.connect(this.ctx.destination);
+
+                    this.updateUI(true);
+                    this.startTime = Date.now();
+                    this.timerInterval = setInterval(() => {
+                        const d = Math.floor((Date.now() - this.startTime) / 1000);
+                        const m = String(Math.floor(d / 60)).padStart(2, '0'); const s = String(d % 60).padStart(2, '0');
+                        document.getElementById('timeDisplay').innerText = `${m}:${s}`;
+                    }, 1000);
+                } catch (e) {
+                    console.error(e);
+                    alert("麦克风错误/通道不可用: " + e.message);
+                    this.isRecording = false;
+                    this.updateUI(false);
+                }
+            },
+
+            updateLevel() {
+                if (!this.isRecording) return;
+                this.analyser.getByteFrequencyData(this.dataArray);
+                let sum = 0;
+                for (let i = 0; i < this.dataArray.length; i++) sum += this.dataArray[i];
+                const avg = sum / this.dataArray.length;
+
+                const scale = 1 + (avg / 60);
+                const opacity = Math.min(1, avg / 30);
+
+                // Theme-aware colors
+                const isMgx = document.body.classList.contains('theme-mgx');
+                let color;
+
+                if (isMgx) {
+                    // MGX: Monochrome Ripple (No Red)
+                    // Low level: Faint Grey, High level: Dark Grey/Black
+                    color = avg > 80 ? 'rgba(31, 41, 55, 0.5)' : 'rgba(107, 114, 128, 0.1)';
+                } else {
+                    // Dark Mode: Neon Purple/Red
+                    color = avg > 80 ? 'rgba(217, 70, 239, 0.6)' : 'rgba(220, 38, 38, 0.4)';
+                }
+
+                const ring = document.getElementById('visualizerRing');
+                if (ring) {
+                    ring.style.transform = `translate(-50%, -50%) scale(${scale})`;
+                    ring.style.opacity = opacity;
+                    ring.style.background = `radial-gradient(circle, ${color} 0%, transparent 70%)`;
+                }
+
+                this.rafId = requestAnimationFrame(this.updateLevel.bind(this));
+            },
+
+            stopRecord() {
+                if (!this.isRecording) return;
+                this.isRecording = false;
+                cancelAnimationFrame(this.rafId);
+                clearInterval(this.timerInterval);
+
+                const ring = document.getElementById('visualizerRing');
+                if (ring) { ring.style.opacity = 0; ring.style.transform = 'translate(-50%, -50%) scale(1)'; }
+
+                if (this.mic) this.mic.disconnect();
+                if (this.processor) this.processor.disconnect();
+
+                const mp3Data = this.encoder.flush();
+                if (mp3Data.length > 0) this.chunks.push(mp3Data);
+
+                this.blob = new Blob(this.chunks, { type: 'audio/mp3' });
+                const url = URL.createObjectURL(this.blob);
+                const audio = document.getElementById('audioPreview');
+                audio.src = url;
+
+                this.updateUI(false);
+                UI.updateSunoStatus(); // Update Suno modal status
+            },
+
+            clearRecording() {
+                this.blob = null; this.chunks = [];
+                const audio = document.getElementById('audioPreview');
+                audio.pause(); audio.src = ''; audio.load();
+                document.getElementById('timeDisplay').innerText = '00:00';
+                this.updateUI(false);
+                UI.updateSunoStatus();
+            },
+
+            updateUI(recording) {
+                const btnRec = document.getElementById('btnRecord');
+                const btnStop = document.getElementById('btnStop');
+                const btnPlay = document.getElementById('btnPlay');
+                const btnDownload = document.getElementById('btnDownload');
+                const dot = document.getElementById('recDot');
+
+                if (recording) {
+                    dot.classList.add('animate-pulse');
+                    btnStop.disabled = false;
+                    btnStop.style.color = '#fff';
+                    btnPlay.disabled = true;
+                    btnDownload.disabled = true;
+                } else {
+                    dot.classList.remove('animate-pulse');
+                    const hasRec = !!this.blob;
+                    btnPlay.disabled = !hasRec;
+                    btnDownload.disabled = !hasRec;
+                    btnStop.disabled = !hasRec;
+
+                    if (hasRec) {
+                        btnStop.style.color = '#ef4444';
+                    } else {
+                        btnPlay.style.color = '';
+                        btnDownload.style.color = '';
+                        btnStop.style.color = '';
+                    }
+                }
+            }
+        };
+
+        const AuthService = {
+            async register(username, password) {
+                const res = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                return await res.json();
+            },
+            async login(username, password) {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                return await res.json();
+            }
+        };
+
+        // --- Suno Service (OpenAI-HK Integration) ---
+        const SunoService = {
+            // 基础 API 地址 (OpenAI-HK)
+            // 修复：回滚到 /sunoapi，因为 /suno 导致 404
+            baseUrl: 'https://api.openai-hk.com/sunoapi',
+
+            clipUrls: { A: null, B: null },
+
+            // 1. 完整的 S3 预签名上传流程
+            async uploadAudio(blob, apiKey) {
+                try {
+                    // Step 1: 初始化上传 (获取 S3 签名)
+                    // URL: https://api.openai-hk.com/sunoapi/uploads/audio
+                    const initRes = await fetch(`${this.baseUrl}/uploads/audio`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${apiKey}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ extension: 'mp3' })
+                    });
+
+                    if (!initRes.ok) {
+                        const txt = await initRes.text();
+                        throw new Error(`初始化上传失败 (${initRes.status}): ${txt}`);
+                    }
+
+                    const initData = await initRes.json();
+                    const audioId = initData.id;
+                    const s3Url = initData.url;
+                    const fields = initData.fields; // AWS 签名参数
+
+                    // Step 2: 上传文件到 S3
+                    // 注意：FormData 中字段顺序很重要，file 必须在最后
+                    const formData = new FormData();
+                    if (fields) {
+                        for (const key in fields) {
+                            formData.append(key, fields[key]);
+                        }
+                    }
+                    formData.append('file', blob);
+
+                    const uploadRes = await fetch(s3Url, {
+                        method: 'POST',
+                        body: formData // 直接发给 S3，不需要 Authorization 头
+                    });
+
+                    if (!uploadRes.ok) {
+                        throw new Error(`S3 文件传输失败 (${uploadRes.status})`);
+                    }
+
+                    // Step 3: 确认上传完成
+                    // URL: .../uploads/audio/{id}/upload-finish
+                    const finishRes = await fetch(`${this.baseUrl}/uploads/audio/${audioId}/upload-finish`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${apiKey}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            upload_type: 'file_upload',
+                            upload_filename: 'recording.mp3'
+                        })
+                    });
+
+                    if (!finishRes.ok) {
+                        const txt = await finishRes.text();
+                        throw new Error(`确认上传失败 (${finishRes.status}): ${txt}`);
+                    }
+
+                    // 返回 audioId 用于生成
+                    return audioId;
+
+                } catch (e) {
+                    console.error("Upload process failed:", e);
+                    throw e; // 直接抛出，不降级
+                }
+            },
+
+            // 2. 生成音乐 (Inspire Mode Only)
+            async generateMusic(prompt, tags, _unusedAudioId, apiKey) {
+                // v5 payload structure
+                const payload = {
+                    prompt: prompt.substring(0, 3000),
+                    tags: tags,
+                    mv: 'chirp-crow', // Suno v5 模型
+                    title: "LyricStudio Gen",
+                    make_instrumental: false
+                };
+
+                // NOTE: removed audio_prompt_id logic for Inspire Mode
+
+                const res = await fetch(`${this.baseUrl}/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!res.ok) {
+                    const errText = await res.text();
+                    throw new Error(`生成请求拒绝 (${res.status}): ${errText.substring(0, 100)}`);
+                }
+
+                return await res.json();
+            },
+
+            // 3. 轮询状态
+            async pollStatus(ids, apiKey) {
+                const url = `${this.baseUrl}/feed/${ids}`;
+                const res = await fetch(url, {
+                    headers: { 'Authorization': `Bearer ${apiKey}` }
+                });
+                return await res.json();
+            },
+
+            async download(clip) {
+                const url = this.clipUrls[clip];
+                if (url) {
+                    try {
+                        const response = await fetch(url);
+                        if (!response.ok) throw new Error('Network response was not ok');
+                        const blob = await response.blob();
+                        const urlBlob = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = urlBlob;
+                        a.download = `suno_v5_${clip}_${Date.now()}.mp3`;
+                        document.body.appendChild(a);
+                        a.click();
+                        window.URL.revokeObjectURL(urlBlob);
+                        document.body.removeChild(a);
+                    } catch (err) {
+                        console.warn("Direct download failed, trying new tab", err);
+                        window.open(url, '_blank');
+                    }
+                }
+            }
+        };
+
+        // ========================================
+        // COPY FEEDBACK MICRO-INTERACTION
+        // ========================================
+        function showCopyFeedback(buttonId) {
+            const btn = document.getElementById(buttonId);
+            if (!btn) return;
+
+            const originalBg = btn.style.backgroundColor;
+            const originalColor = btn.style.color;
+            const originalTransform = btn.style.transform;
+
+            // Success state - Dark background + White text
+            btn.style.backgroundColor = 'var(--mgx-gray-900)';
+            btn.style.color = 'var(--mgx-white)';
+            btn.style.transform = 'scale(0.95)';
+
+            // Icon switch to check mark
+            const icon = btn.querySelector('i');
+            if (icon) {
+                const originalIcon = icon.getAttribute('data-lucide');
+                icon.setAttribute('data-lucide', 'check');
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+
+                // Restore after 200ms
+                setTimeout(() => {
+                    btn.style.backgroundColor = originalBg;
+                    btn.style.color = originalColor;
+                    btn.style.transform = originalTransform;
+                    icon.setAttribute('data-lucide', originalIcon);
+                    if (typeof lucide !== 'undefined') {
+                        lucide.createIcons();
+                    }
+                }, 200);
+            } else {
+                // No icon, just restore styles
+                setTimeout(() => {
+                    btn.style.backgroundColor = originalBg;
+                    btn.style.color = originalColor;
+                    btn.style.transform = originalTransform;
+                }, 200);
+            }
+        }
+
+        // --- LLM ---
+        const LLM = {
+            async generate(prompt, userId) {
+                const cleanKey = state.config.apiKey;
+                if (!cleanKey) { alert("错误：未检测到有效卡密。请激活软件。"); return null; }
+                const _u = atob('aHR0cHM6Ly94eXVhcGkudG9wL3Yx');
+                const _m = atob('Z2VtaW5pLTMtcHJvLXByZXZpZXc=');
+                const sysPrompt = "You are a songwriter. Output format: 1. [CHORDS] Roman Numerals. 2. [LYRICS] with headers. 3. [SUNO STYLE] tags. CRITICAL: COUNT CHARACTERS ACCURATELY. NO Artist Names in Tags.";
+                try {
+                    // Pass user_id to backend
+                    const res = await fetch('/api/generate_lyric', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            user_id: userId,
+                            prompt: prompt
+                        })
+                    });
+
+                    if (!res.ok) {
+                        const errorData = await res.json();
+                        throw new Error(errorData.error || "API Request Failed");
+                    }
+                    const data = await res.json();
+                    return data.lyrics; // Backend returns { lyrics: "..." }
+                } catch (e) {
+                    console.error(e);
+                    alert("生成失败 (API Error): " + e.message);
+                    return null;
+                }
+            }
+        };
+
+        // --- UI ---
+        const UI = {
+            init() {
+                lucide.createIcons();
+                this.renderVibes();
+                this.setupEventListeners();
+
+                // Initialize Theme
+                this.initTheme();
+
+                // Restore Saved Content
+                if (state.savedContent) {
+                    document.getElementById('lyricsEditor').innerHTML = state.savedContent;
+                    state.history.push(state.savedContent);
+                    this.extractDataForSuno(); // Extract data on load
+                }
+
+                // Removed local trial check logic here, relying on backend
+
+
+                this.updateSunoStatus();
+            },
+
+            initTheme() {
+                // Default to MGX if not set
+                const savedTheme = localStorage.getItem('lyricStudio_theme') || 'mgx';
+                if (savedTheme === 'mgx') {
+                    document.body.classList.add('theme-mgx');
+                }
+                this.updateThemeIcon();
+            },
+
+            toggleTheme() {
+                const isMgx = document.body.classList.contains('theme-mgx');
+                if (isMgx) {
+                    document.body.classList.remove('theme-mgx');
+                    localStorage.setItem('lyricStudio_theme', 'legacy');
+                } else {
+                    document.body.classList.add('theme-mgx');
+                    localStorage.setItem('lyricStudio_theme', 'mgx');
+                }
+                this.updateThemeIcon();
+            },
+
+            updateThemeIcon() {
+                const isMgx = document.body.classList.contains('theme-mgx');
+                const btn = document.getElementById('btnThemeToggle');
+                if (btn) {
+                    // Update icon: Moon for Legacy (Dark), Sun for MGX (Light)
+                    // Wait, usually Moon implies "Click to go Dark" or "Current is Dark"?
+                    // Let's standard: If Light Mode (MGX), show Moon (to switch to dark). 
+                    // If Dark Mode (Legacy), show Sun (to switch to light).
+                    btn.innerHTML = isMgx ? '<i data-lucide="moon" class="w-5 h-5"></i>' : '<i data-lucide="sun" class="w-5 h-5"></i>';
+                    lucide.createIcons(); // Re-render icon
+
+                    // Fix button color in MGX mode because header text might be white but bg is white
+                    // Wait, header is usually dark in dark mode. In MGX, sidebar is white. 
+                    // Need to check header styles.
+                }
+            },
+
+            checkAuth() {
+                console.log("Checking auth...", state.user);
+                if (!state.user) {
+                    console.log("User not logged in, showing modal");
+                    UI.showAuthModal();
+                    return false;
+                }
+                return true;
+            },
+
+            showAuthModal() {
+                document.getElementById('authModal').classList.remove('hidden');
+            },
+
+
+
+            extractDataForSuno() {
+                const editor = document.getElementById('lyricsEditor');
+                let rawText = "";
+                let tags = "";
+
+                // Extract plain text lyrics excluding UI elements
+                editor.childNodes.forEach(n => {
+                    if (n.nodeType === 1) { // Element
+                        if (n.classList.contains('suno-tags-display')) {
+                            tags = n.innerText.replace(/^[0-9\.\)\s]*/g, '').trim();
+                        } else if (!n.classList.contains('chords-display') && !n.classList.contains('suno-separator') && !n.innerText.includes('[CHORDS]')) {
+                            rawText += n.innerText + "\n";
+                        }
+                    }
+                });
+
+                state.lastLyricsText = rawText.trim();
+                state.lastTags = tags || "Pop, Melodic"; // Fallback
+            },
+
+            saveHistory() {
+                const content = document.getElementById('lyricsEditor').innerHTML;
+                if (state.history.length === 0 || state.history[state.history.length - 1] !== content) {
+                    state.history.push(content);
+                    if (state.history.length > 20) state.history.shift();
+                }
+                state.saveContent(content);
+                this.updateUndoButton();
+                this.extractDataForSuno();
+            },
+
+            undo() {
+                if (state.history.length > 1) {
+                    state.history.pop();
+                    const prev = state.history[state.history.length - 1];
+                    document.getElementById('lyricsEditor').innerHTML = prev;
+                    state.saveContent(prev);
+                }
+                state.isShowingPrompt = false;
+                this.updateUndoButton();
+                this.extractDataForSuno();
+            },
+
+            updateUndoButton() {
+                const btn = document.getElementById('btnUndo');
+                btn.disabled = state.history.length <= 1;
+                if (btn.disabled) btn.classList.add('opacity-30');
+                else btn.classList.remove('opacity-30');
+            },
+
+            updateSunoStatus() {
+                const audioStat = document.getElementById('sunoAudioStatus');
+                const btnAction = document.getElementById('btnSunoAction');
+                const lyricsP = document.getElementById('sunoLyricsPreview');
+                const tagsP = document.getElementById('sunoTagsPreview');
+
+                if (AudioEngine.blob) {
+                    audioStat.innerText = `已就绪: ${(AudioEngine.blob.size / 1024).toFixed(1)} KB (MP3)`;
+                    audioStat.classList.remove('text-gray-500', 'italic');
+                    audioStat.classList.add('text-green-400', 'font-mono');
+                } else {
+                    audioStat.innerText = "未检测到录音。请先在主界面底部录制一段旋律或哼唱。";
+                    audioStat.classList.add('text-gray-500', 'italic');
+                    audioStat.classList.remove('text-green-400', 'font-mono');
+                }
+
+                if (lyricsP) lyricsP.innerText = state.lastLyricsText || "暂无歌词...";
+                if (tagsP) tagsP.innerText = state.lastTags || "暂无风格...";
+
+                // Enable button if we have lyrics (Inspire Mode only now)
+                const ready = !!state.lastLyricsText;
+                btnAction.disabled = !ready;
+                if (!ready) {
+                    btnAction.classList.add('opacity-50', 'cursor-not-allowed');
+                    btnAction.innerHTML = `<i data-lucide="zap" class="w-4 h-4"></i> 等待素材 (Lyrics)`;
+                } else {
+                    btnAction.classList.remove('opacity-50', 'cursor-not-allowed');
+                    btnAction.innerHTML = `<i data-lucide="zap" class="w-4 h-4"></i> 开始生成 (Generate v5)`;
+                }
+            },
+
+            setupEventListeners() {
+
+                const safeBind = (id, fn) => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.onclick = (e) => {
+                            console.log(`Click triggered on ${id}`);
+                            fn(e);
+                        };
+                        console.log(`[OK] Bound ${id}`);
+                    } else {
+                        console.error(`[FAIL] Missing element for bind: ${id}`);
+                    }
+                };
+
+                // --- Auth Listeners ---
+                let authMode = 'login';
+                safeBind('btnCloseAuth', () => document.getElementById('authModal').classList.add('hidden'));
+
+                safeBind('tabLogin', () => {
+                    authMode = 'login';
+                    document.getElementById('tabLogin').className = "flex-1 py-1.5 text-sm rounded-md bg-white/10 text-white shadow transition-all";
+                    document.getElementById('tabRegister').className = "flex-1 py-1.5 text-sm rounded-md text-gray-400 hover:text-white transition-all";
+                    document.getElementById('btnAuthText').innerText = "立即登录";
+                });
+                safeBind('tabRegister', () => {
+                    authMode = 'register';
+                    document.getElementById('tabRegister').className = "flex-1 py-1.5 text-sm rounded-md bg-white/10 text-white shadow transition-all";
+                    document.getElementById('tabLogin').className = "flex-1 py-1.5 text-sm rounded-md text-gray-400 hover:text-white transition-all";
+                    document.getElementById('btnAuthText').innerText = "注册账号";
+                });
+
+                safeBind('btnAuthAction', async () => {
+                    const u = document.getElementById('authUsername').value;
+                    const p = document.getElementById('authPassword').value;
+                    const errDiv = document.getElementById('authError');
+                    const btn = document.getElementById('btnAuthAction');
+
+                    if (!u || !p) { errDiv.innerText = "请输入用户名和密码"; errDiv.classList.remove('hidden'); return; }
+
+                    btn.disabled = true;
+                    errDiv.classList.add('hidden');
+
+                    try {
+                        let res;
+                        if (authMode === 'login') {
+                            res = await AuthService.login(u, p);
+                        } else {
+                            res = await AuthService.register(u, p);
+                            if (res.success) {
+                                res = await AuthService.login(u, p);
+                            }
+                        }
+
+                        if (res.error) {
+                            errDiv.innerText = res.error;
+                            errDiv.classList.remove('hidden');
+                        } else if (res.user) {
+                            state.user = res.user;
+                            state.saveUser();
+                            document.getElementById('authModal').classList.add('hidden');
+                            alert(`欢迎, ${res.user.username}!`);
+                        }
+                    } catch (e) {
+                        errDiv.innerText = e.message;
+                        errDiv.classList.remove('hidden');
+                    }
+                    btn.disabled = false;
+                });
+
+                // Force auth on load if no user (Check after delay)
+                if (!state.user) {
+                    setTimeout(() => UI.showAuthModal(), 500);
+                }
+                // --- End Auth Listeners ---
+
+
+                // Sidebar
+                const sb = document.getElementById('mainSidebar');
+                const bd = document.getElementById('mobileBackdrop');
+                const toggleSb = () => { sb.classList.toggle('-translate-x-full'); bd.classList.toggle('hidden'); bd.classList.toggle('opacity-0'); };
+                safeBind('btnMobileMenu', toggleSb);
+                safeBind('btnCloseSidebar', toggleSb);
+                if (bd) bd.onclick = toggleSb;
+
+                // Undo
+                safeBind('btnUndo', () => UI.undo());
+
+                // Undo
+                safeBind('btnUndo', () => UI.undo());
+
+                // Theme Toggle
+                safeBind('btnThemeToggle', () => UI.toggleTheme());
+
+                // Audio Settings Modal Logic
+                const modal = document.getElementById('audioSettingsModal');
+                safeBind('btnAudioSettings', () => {
+                    if (AudioEngine.ctx) {
+                        AudioEngine.init(); // Refresh devices
+                    } else {
+                        AudioEngine.init();
+                    }
+                    modal.classList.remove('hidden');
+                });
+                safeBind('btnCloseAudioSettings', () => modal.classList.add('hidden'));
+
+                // Refresh Devices
+                safeBind('btnRefreshDevices', () => {
+                    AudioEngine.enumerate();
+                    alert("设备列表已刷新");
+                });
+
+                // Save Audio Settings
+                safeBind('btnSaveAudioSettings', () => {
+                    const selectDev = document.getElementById('audioInputSelect');
+                    const selectCh = document.getElementById('audioChannelSelect');
+                    AudioEngine.selectedDeviceId = selectDev.value;
+                    AudioEngine.selectedChannelIndex = parseInt(selectCh.value) || 1;
+                    modal.classList.add('hidden');
+                    alert(`音频设置已保存：输入设备通道 ${AudioEngine.selectedChannelIndex} (Mono)`);
+                });
+
+                // Audio Record Control
+                const btnRec = document.getElementById('btnRecord');
+                if (btnRec) btnRec.onclick = () => {
+                    if (!AudioEngine.isRecording) {
+                        AudioEngine.startRecord();
+                    } else {
+                        AudioEngine.stopRecord();
+                    }
+                };
+
+                safeBind('btnPlay', () => document.getElementById('audioPreview').play());
+
+                const btnStop = document.getElementById('btnStop');
+                if (btnStop) {
+                    btnStop.onclick = () => {
+                        const audio = document.getElementById('audioPreview');
+                        if (AudioEngine.isRecording) { AudioEngine.stopRecord(); return; }
+                        if (!audio.paused && audio.duration > 0) { audio.pause(); audio.currentTime = 0; return; }
+                        if (AudioEngine.blob) { AudioEngine.clearRecording(); }
+                    };
+                    btnStop.ondblclick = () => { if (AudioEngine.blob) AudioEngine.clearRecording(); };
+                }
+
+                safeBind('btnDownload', () => {
+                    if (AudioEngine.blob) {
+                        const a = document.createElement('a'); a.href = URL.createObjectURL(AudioEngine.blob);
+                        a.download = `idea_${Date.now()}.mp3`; a.click();
+                    }
+                });
+
+                // Copy
+                safeBind('btnCopyLyrics', () => {
+                    const editor = document.getElementById('lyricsEditor');
+                    let text = "";
+                    const nodes = editor.childNodes;
+                    nodes.forEach(n => {
+                        if (n.nodeType === 1 && !n.classList.contains('suno-tags-display') && !n.classList.contains('chords-display') && !n.classList.contains('suno-separator')) {
+                            text += n.innerText + "\n";
+                        }
+                    });
+
+                    // Fix: Use execCommand for iframe compatibility
+                    const ta = document.createElement('textarea');
+                    ta.value = text.trim();
+                    ta.style.position = 'fixed'; // Prevent scrolling
+                    ta.style.opacity = '0';
+                    document.body.appendChild(ta);
+                    ta.select();
+                    try {
+                        document.execCommand('copy');
+                        // Visual feedback instead of alert
+                        showCopyFeedback('btnCopyLyrics');
+                    } catch (e) {
+                        console.error(e);
+                        // alert("复制失败，请手动选择复制");
+                    }
+                    document.body.removeChild(ta);
+                });
+
+                safeBind('btnCopyTags', () => {
+                    const tagDiv = document.querySelector('.suno-tags-display');
+                    if (tagDiv) {
+                        let text = tagDiv.innerText.replace(/^[0-9\.\)\s]*/g, '').trim();
+
+                        // Fix: Use execCommand
+                        const ta = document.createElement('textarea');
+                        ta.value = text;
+                        ta.style.position = 'fixed';
+                        ta.style.opacity = '0';
+                        document.body.appendChild(ta);
+                        ta.select();
+                        try {
+                            document.execCommand('copy');
+                            // Visual feedback instead of alert
+                            showCopyFeedback('btnCopyTags');
+                        } catch (e) {
+                            console.error(e);
+                        }
+                        document.body.removeChild(ta);
+                    }
+                });
+
+                safeBind('btnVibeSmooth', () => {
+                    state.vibe['顺畅'] = !state.vibe['顺畅'];
+                    UI.renderVibes();
+                });
+
+                safeBind('btnUnlock', () => {
+                    const inputKey = document.getElementById('unlockPasswordInput').value.trim();
+                    const msg = document.getElementById('unlockMsg');
+                    if (inputKey.length > 10) {
+                        state.isUnlocked = true; state.config.apiKey = inputKey; state.saveTrialState();
+                        document.getElementById('passwordModal').classList.add('hidden'); msg.classList.add('hidden'); alert("激活成功！");
+                    } else { msg.classList.remove('hidden'); }
+                });
+
+                safeBind('btnPay', () => state.initiatePayment());
+                safeBind('btnCheckPay', () => state.checkPaymentStatus());
+
+                // Generate Lyrics
+                safeBind('btnGenerate', async () => {
+                    if (!UI.checkAuth()) return; // Must be logged in
+                    if (state.isGenerating) return; // Prevent double click
+                    state.isGenerating = true;
+
+                    state.isShowingPrompt = false;
+                    const btn = document.getElementById('btnGenerate');
+                    const topic = document.getElementById('inputTopic').value || "Love and Loss";
+                    const artist = document.getElementById('inputArtist').value;
+                    const style = document.getElementById('selStyle').value;
+                    const rhyme = document.getElementById('selRhyme').value;
+                    const rGroup = document.getElementById('selRhymeGroup').value;
+                    const length = document.getElementById('selLength').value;
+                    const editorWrapper = document.getElementById('editorWrapper');
+
+                    const vibeObj = { ...state.vibe };
+                    let vibeDesc = [];
+                    for (let k in vibeObj) {
+                        if (vibeObj[k]) {
+                            if (k === '高级') { vibeDesc.push("Aesthetic: Sophisticated, Poetic & Deep. Imagery driven."); }
+                            else if (k === '下沉') { vibeDesc.push("Style: Viral/Sinking Market. Tone: Direct vernacular, Exaggerated emotions."); }
+                            else if (k === '顺畅') { vibeDesc.push("Flow: Maximum Phonetic Smoothness."); }
+                            else if (k === '接地气') { vibeDesc.push("Tone: Grounded & Conversational."); }
+                            else if (k === '伤感') { vibeDesc.push("Emotion: Sadness/Melancholy."); }
+                            else if (k === '温柔') { vibeDesc.push("Emotion: Gentle/Warm."); }
+                        }
+                    }
+                    const vibes = vibeDesc.join(" + ") || 'Neutral';
+                    const struct = "Intro, Verse 1, Verse 2, Chorus 1, Chorus 2, Outro";
+                    let rhymeInst = `Rhyme Constraint: Enforce ${rhyme} pattern.`;
+                    if (rhyme === 'AAAA') rhymeInst += ` Pattern: AAAA (Global Monorhyme). MANDATORY: ALL lines in ALL verses and choruses MUST rhyme with the SAME sound group. Do not change rhyme scheme between sections.`;
+                    else if (rhyme === 'XAXA') rhymeInst += ` Pattern: X A X A.`;
+                    else if (rhyme === 'AABB') rhymeInst += ` Pattern: A A B B.`;
+                    else if (rhyme === 'ABAB') rhymeInst += ` Pattern: A B A B.`;
+                    else if (rhyme === 'AAXA') rhymeInst += ` Pattern: A A X A.`;
+                    else if (rhyme === 'Casual') rhymeInst += ` Casual/Free Rhyme.`;
+                    if (rGroup !== 'Random') rhymeInst += ` Target Rhyme Group: "${rGroup}".`;
+                    let lenInst = "";
+                    let targetLen = 0;
+                    if (length === '6+6+9') { lenInst = `[MANDATORY VISUAL TEMPLATE - 6+6+9] Fill: Line 1(6), Line 2(6), Line 3(9), Line 4(6), Line 5(6), Line 6(9). Line 3&6 must be STRICTLY 9 chars.`; }
+                    else if (length === '6+6+10') { lenInst = `[MANDATORY VISUAL TEMPLATE - 6+6+10] Fill: Line 1(6), Line 2(6), Line 3(10), Line 4(6), Line 5(6), Line 6(10). Line 3&6 must be STRICTLY 10 chars.`; }
+                    else if (length === 'Random') { lenInst = "No strict character count limit. Prioritize natural flow and expression."; }
+                    else if (length.includes('-')) { const [min, max] = length.split('-'); lenInst = `Length: Mix lengths between ${min} and ${max} chars. Do NOT make every line the same length.`; }
+                    else { const n = parseInt(length); targetLen = n; lenInst = `Length: EXACTLY ${n} chars/line. Punctuation doesn't count.`; }
+
+                    const prompt = `
+**Role**: Expert Songwriter.
+**Task**: Write lyrics and Suno tags.
+**Topic**: "${topic}"
+**Artist Reference**: "${artist}" (Mimic style ONLY. DO NOT include artist name in output tags).
+**Style**: ${style}
+**Vibe**: ${vibes}
+**Structure Order**: ${struct}. 
+**CRITICAL**: Generate only [Verse 1], [Verse 2], [Chorus 1], [Chorus 2]. 
+[Intro], [Outro] should just be headers with NO text.
+**Technical**:
+- ${rhymeInst}
+- ${lenInst}
+- **Output Format**:
+  1. [CHORDS] Provide a progression of EXACTLY 8 chords using Arabic Numerals (1-7).
+      - IMPORTANT: You MUST add 'm' to 2, 3, and 6 (e.g., 6m, 2m, 3m).
+      - Example: 1 - 5 - 6m - 4 - 2m - 5 - 1 - 5
+  2. [LYRICS] Content with English Headers: [Intro], [Verse 1], [Verse 2], [Chorus 1], [Chorus 2], [Outro].
+  3. [SUNO STYLE] Header followed by tags (Genre, Mood, Instruments ONLY. No artist names).
+**Language**: Chinese (Mainly).
+                    `.trim();
+
+                    state.lastPrompt = prompt;
+                    const old = btn.innerHTML;
+                    btn.disabled = true; btn.innerHTML = `<span class="loader border-white border-t-transparent mr-2"></span><span class="ml-2">生成中...</span>`;
+
+                    if (window.innerWidth < 768) toggleSb();
+                    if (editorWrapper) editorWrapper.classList.add('generating');
+
+                    try {
+                        const res = await LLM.generate(prompt, state.user.id);
+
+                        if (editorWrapper) editorWrapper.classList.remove('generating');
+
+                        if (res) {
+                            // Trial tracking is handled by backend
+                            if (!state.user.is_pro) {
+                                state.user.trial_count++;
+                                state.saveUser();
+                            }
+                            UI.renderLyrics(res, targetLen);
+                            UI.saveHistory();
+                        }
+                    } catch (e) {
+                        console.error("Critical Generation Error:", e);
+                        alert("生成流程异常: " + e.message);
+                    } finally {
+                        state.isGenerating = false;
+                        btn.disabled = false; btn.innerHTML = old;
+                    }
+                });
+
+                safeBind('btnViewPrompt', () => {
+                    const pwd = prompt("请输入密码查看提示词：");
+                    if (pwd !== '1111') { alert("密码错误！"); return; }
+                    if (!state.lastPrompt) return alert("请先生成歌词！");
+                    alert(state.lastPrompt);
+                });
+
+                // --- Suno UI Logic ---
+                // btnSunoPanel: Trigger Popup Key Input or Open Studio if key exists
+                safeBind('btnSunoPanel', () => {
+                    if (!state.sunoApiKey) {
+                        document.getElementById('sunoKeyModal').classList.remove('hidden');
+                    } else {
+                        this.extractDataForSuno();
+                        this.updateSunoStatus();
+                        document.getElementById('sunoModal').classList.remove('hidden');
+                    }
+                });
+
+                // Save Suno Key
+                safeBind('btnSaveSunoKey', () => {
+                    const key = document.getElementById('sunoKeyInput').value.trim();
+                    if (key.startsWith('hk-')) {
+                        state.sunoApiKey = key;
+                        document.getElementById('sunoKeyModal').classList.add('hidden');
+
+                        this.extractDataForSuno();
+                        this.updateSunoStatus();
+                        document.getElementById('sunoModal').classList.remove('hidden');
+                    } else {
+                        alert("请输入有效的 hk- 开头的 API Key");
+                    }
+                });
+
+                safeBind('btnCloseSunoKey', () => document.getElementById('sunoKeyModal').classList.add('hidden'));
+                safeBind('btnCloseSuno', () => document.getElementById('sunoModal').classList.add('hidden'));
+
+                // Suno Mode Handling
+                safeBind('btnSunoAction', async () => {
+                    if (!UI.checkAuth()) return; // Auth required
+
+                    const btn = document.getElementById('btnSunoAction');
+                    const statusTxt = document.getElementById('sunoStatusText');
+                    const resultsDiv = document.getElementById('sunoResults');
+
+                    // Reset UI
+                    resultsDiv.classList.remove('hidden');
+                    statusTxt.innerText = "准备中...";
+                    statusTxt.className = "text-[10px] text-gray-400";
+
+                    document.getElementById('playerA').classList.add('hidden');
+                    document.getElementById('playerB').classList.add('hidden');
+
+                    btn.disabled = true;
+                    btn.innerHTML = `<span class="loader border-white border-t-transparent mr-2"></span> 处理中...`;
+
+                    try {
+                        const apiKey = state.sunoApiKey;
+                        if (!apiKey) throw new Error("API Key 未设置");
+
+                        // 1. Generate (Inspire Mode - No Audio Upload)
+                        btn.innerHTML = `<span class="loader border-white border-t-transparent mr-2"></span> Suno v5 生成中...`;
+                        statusTxt.innerText = "正在提交生成任务 (Step 1/2)...";
+
+                        // No audioId for Inspire Mode
+                        const genResponse = await SunoService.generateMusic(state.lastLyricsText, state.lastTags, null, apiKey);
+
+                        // Extract IDs
+                        let clipIds = [];
+                        if (genResponse.clips && Array.isArray(genResponse.clips)) {
+                            clipIds = genResponse.clips.map(c => c.id);
+                        }
+                        if (clipIds.length === 0) {
+                            if (genResponse.id) clipIds = [genResponse.id];
+                            else throw new Error("API未返回任务ID (可能是额度不足或参数错误)");
+                        }
+                        const idsStr = clipIds.join(',');
+
+                        // 3. Poll
+                        statusTxt.innerText = "Suno v5 正在创作音乐...";
+                        statusTxt.className = "text-[10px] text-fuchsia-500 animate-pulse";
+
+                        let attempts = 0;
+                        const poller = setInterval(async () => {
+                            attempts++;
+                            if (attempts > 60) { clearInterval(poller); statusTxt.innerText = "请求超时 (60s)"; statusTxt.className = "text-[10px] text-red-500"; btn.disabled = false; btn.innerHTML = "重试"; return; }
+
+                            try {
+                                const check = await SunoService.pollStatus(idsStr, apiKey);
+                                let clips = Array.isArray(check) ? check : (check.clips || check.data || []);
+
+                                if (clips && clips.length > 0) {
+                                    const allDone = clips.every(c => c.status === 'complete' || c.status === 'streaming');
+                                    const anyFailed = clips.some(c => c.status === 'error');
+
+                                    if (anyFailed) {
+                                        clearInterval(poller);
+                                        statusTxt.innerText = "生成失败 (Suno 拒绝处理)";
+                                        statusTxt.className = "text-[10px] text-red-500";
+                                        btn.disabled = false;
+                                        btn.innerHTML = "重试";
+                                        return;
+                                    }
+
+                                    if (allDone) {
+                                        clearInterval(poller);
+                                        statusTxt.innerText = "生成完成!";
+                                        statusTxt.className = "text-[10px] text-green-500 font-bold";
+
+                                        // Render & Download
+                                        clips.forEach((clip, idx) => {
+                                            const player = idx === 0 ? document.getElementById('playerA') : document.getElementById('playerB');
+                                            const audio = idx === 0 ? document.getElementById('audioA') : document.getElementById('audioB');
+                                            const letter = idx === 0 ? 'A' : 'B';
+
+                                            const url = clip.audio_url || clip.video_url;
+                                            if (url) {
+                                                SunoService.clipUrls[letter] = url;
+                                                player.classList.remove('hidden');
+                                                audio.src = url;
+                                                SunoService.download(letter);
+                                            }
+                                        });
+
+                                        btn.disabled = false;
+                                        btn.innerHTML = "生成完成 (再次生成)";
+                                    }
+                                }
+                            } catch (e) { console.error("Poll error:", e); }
+                        }, 5000);
+
+                    } catch (e) {
+                        console.error(e);
+                        statusTxt.innerText = e.message;
+                        statusTxt.className = "text-[10px] text-red-500 font-bold break-all";
+                        btn.disabled = false;
+                        btn.innerHTML = "重试";
+                        alert("错误: " + e.message);
+                    }
+                });
+            },
+
+            updateSunoModeUI() {
+                // Feature removed
+            },
+
+            renderVibes() {
+                const c = document.getElementById('vibeContainer'); c.innerHTML = '';
+                const smoothBtn = document.getElementById('btnVibeSmooth');
+                const singleSelectGroup = ['接地气', '伤感', '下沉', '高级', '温柔'];
+
+                if (state.vibe['顺畅']) {
+                    smoothBtn.classList.add('chip-active-override');
+                    // Legacy Support
+                    smoothBtn.classList.add('bg-fuchsia-600', 'text-white', 'border-fuchsia-500');
+                    smoothBtn.classList.remove('bg-transparent', 'text-gray-400', 'border-white/10');
+                } else {
+                    smoothBtn.classList.remove('chip-active-override');
+                    // Legacy Support
+                    smoothBtn.classList.remove('bg-fuchsia-600', 'text-white', 'border-fuchsia-500');
+                    smoothBtn.classList.add('bg-transparent', 'text-gray-400', 'border-white/10');
+                }
+
+                Object.keys(state.vibe).forEach(k => {
+                    if (k === '顺畅') return;
+                    const b = document.createElement('button');
+                    const baseClass = "chip-base px-3 py-1.5 rounded-full cursor-pointer select-none";
+                    const activeClass = state.vibe[k] ? "chip-active" : "chip-inactive";
+                    b.className = `${baseClass} ${activeClass}`;
+                    b.innerText = k;
+                    b.onclick = () => {
+                        if (singleSelectGroup.includes(k)) {
+                            const isTurningOn = !state.vibe[k];
+                            singleSelectGroup.forEach(gKey => state.vibe[gKey] = 0);
+                            state.vibe[k] = isTurningOn ? 1 : 0;
+                        } else {
+                            state.vibe[k] = !state.vibe[k];
+                        }
+                        UI.renderVibes();
+                    };
+                    c.appendChild(b);
+                });
+            },
+
+            renderStructure: () => { },
+
+            renderLyrics(text, targetLen) {
+                const c = document.getElementById('lyricsEditor'); c.innerHTML = '';
+
+                let chords = "";
+                let sunoTags = "";
+                let rawLines = text.split('\n');
+                let lyricLines = [];
+
+                let parseMode = "lyrics";
+
+                rawLines.forEach(l => {
+                    let line = l.trim();
+                    if (!line) return;
+
+                    if (line.includes('[CHORDS]')) {
+                        chords = line.replace('[CHORDS]', '').trim();
+                        return;
+                    }
+
+                    if (line.match(/\[SUNO\s*STYLE\]/i) || line.includes('Suno Style Prompt')) {
+                        parseMode = "tags";
+                        let cleanTag = line.replace(/.*\[SUNO\s*STYLE\][:\s]*|.*Suno Style Prompt[:\s]*/i, '').trim();
+                        cleanTag = cleanTag.replace(/^\d+[\.\)]\s*/, '');
+                        if (cleanTag) sunoTags += cleanTag;
+                        return;
+                    }
+
+                    if (parseMode === "tags") {
+                        sunoTags += (sunoTags ? ", " : "") + line;
+                    } else {
+                        lyricLines.push(line);
+                    }
+                });
+
+                if (chords) {
+                    const cd = document.createElement('div');
+                    cd.className = 'chords-display';
+                    cd.innerText = `🎹 推荐和弦级数: ${chords}`;
+                    c.appendChild(cd);
+                }
+
+                const sectionMap = {};
+                let currentSection = null;
+
+                lyricLines.forEach(line => {
+                    if (line.match(/^\[Outro/i) || line.match(/^\[Intro/i)) { currentSection = null; return; }
+
+                    if (line.match(/^\[Verse 1/i)) currentSection = 'V1';
+                    else if (line.match(/^\[Verse 2/i)) currentSection = 'V2';
+                    else if (line.match(/^\[Chorus 1/i)) currentSection = 'C1';
+                    else if (line.match(/^\[Chorus 2/i)) currentSection = 'C2';
+                    else if (currentSection) {
+                        if (!line.match(/^\[.*\]$/) && !line.includes('Suno Style')) {
+                            if (!sectionMap[currentSection]) sectionMap[currentSection] = [];
+                            sectionMap[currentSection].push(line);
+                        }
+                    }
+                });
+
+                const countCJK = (s) => (s.match(/[\u4e00-\u9fa5]/g) || []).length;
+
+                const renderBlock = (title, linesArray, isInst = false) => {
+                    const w = document.createElement('div'); w.className = "group mb-6";
+                    w.innerHTML = `<div class="text-[10px] text-fuchsia-500/80 font-mono mb-2 select-none font-bold uppercase tracking-wider pl-4 flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-fuchsia-500"></span> ${title}</div>`;
+                    const block = document.createElement('div');
+                    block.className = "lyric-block space-y-1 pl-6 border-l-2 border-white/5 hover:border-fuchsia-500/50 transition-colors py-1";
+
+                    if (isInst) {
+                        const d = document.createElement('div'); d.className = "h-4"; block.appendChild(d);
+                    } else if (linesArray && linesArray.length > 0) {
+                        // Apply Smart Reassembler
+                        const mergedLines = [];
+                        for (let i = 0; i < linesArray.length; i++) {
+                            let line = linesArray[i];
+                            if (targetLen > 0 && i < linesArray.length - 1) {
+                                const nextLine = linesArray[i + 1];
+                                const curLen = countCJK(line);
+                                const nextLen = countCJK(nextLine);
+                                const combined = curLen + nextLen;
+                                if (combined >= targetLen - 1 && combined <= targetLen + 1) {
+                                    if (curLen !== targetLen) {
+                                        line += nextLine;
+                                        i++;
+                                    }
+                                }
+                            }
+                            if (mergedLines.length > 0) {
+                                const prev = mergedLines[mergedLines.length - 1];
+                                if (line.length <= 4 && !prev.match(/[。！？\.\!\?]$/)) {
+                                    mergedLines[mergedLines.length - 1] += line;
+                                    continue;
+                                }
+                            }
+                            mergedLines.push(line);
+                        }
+
+                        mergedLines.forEach(l => {
+                            const d = document.createElement('div');
+                            d.className = "lyric-line cursor-text";
+                            d.contentEditable = true;
+                            if (targetLen === 10 && countCJK(l) === 10) {
+                                const chars = Array.from(l);
+                                let cjkIdx = 0;
+                                let targetIdx = -1;
+                                for (let k = 0; k < chars.length; k++) {
+                                    if (chars[k].match(/[\u4e00-\u9fa5]/)) {
+                                        if (cjkIdx === 1) { targetIdx = k; break; }
+                                        cjkIdx++;
+                                    }
+                                }
+                                if (targetIdx !== -1) {
+                                    chars[targetIdx] = `<span class="text-fuchsia-400 font-bold text-xl">${chars[targetIdx]}</span>`;
+                                    d.innerHTML = chars.join('');
+                                } else { d.innerText = l; }
+                            } else {
+                                d.innerText = l;
+                            }
+                            block.appendChild(d);
+                        });
+                    } else {
+                        const d = document.createElement('div'); d.className = "lyric-line text-red-500/50 italic text-xs"; d.innerText = "(AI Skipped Content)"; block.appendChild(d);
+                    }
+                    w.appendChild(block); c.appendChild(w);
+                };
+
+                renderBlock("[Intro]", null, true);
+                renderBlock("[Verse 1]", sectionMap['V1']);
+                renderBlock("[Verse 2]", sectionMap['V2']);
+                renderBlock("[Chorus 1]", sectionMap['C1']);
+                renderBlock("[Chorus 2]", sectionMap['C2']);
+                renderBlock("[Interlude]", null, true);
+                renderBlock("[Verse 2]", sectionMap['V2']);
+                renderBlock("[Chorus 1]", sectionMap['C1']);
+                renderBlock("[Chorus 2]", sectionMap['C2']);
+                renderBlock("[Chorus 1]", sectionMap['C1']);
+                renderBlock("[Chorus 2]", sectionMap['C2']);
+                renderBlock("[Outro]", null, true);
+
+                if (sunoTags) {
+                    const sep = document.createElement('hr'); sep.className = 'suno-separator'; c.appendChild(sep);
+                    const st = document.createElement('div'); st.className = 'suno-tags-display'; st.innerText = sunoTags; c.appendChild(st);
+                }
+
+                // Trigger Suno extraction
+                this.extractDataForSuno();
+                this.updateSunoStatus();
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                console.log("Initializing UI...");
+                UI.init();
+            } catch (e) {
+                alert("UI Init Error: " + e.message);
+                console.error(e);
+            }
+        });
+
+    </script>
+</body>
+
+</html>
