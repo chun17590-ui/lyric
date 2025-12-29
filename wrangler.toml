@@ -1,0 +1,9 @@
+name = "lyric"
+compatibility_date = "2024-12-29"
+
+pages_build_output_dir = "."
+
+[[d1_databases]]
+binding = "DB"
+database_name = "lyric-db"
+database_id = "f9016b8f-c902-45e8-9cc2-2ec22686bc7a"
