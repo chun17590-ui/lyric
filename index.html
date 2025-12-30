@@ -1249,6 +1249,363 @@
             }
         }
 
+        /* History Sidebar */
+        .history-sidebar {
+            position: fixed;
+            right: 0;
+            top: 56px;
+            bottom: 0;
+            width: 360px;
+            background: #09090b;
+            border-left: 1px solid rgba(255,255,255,0.05);
+            transform: translateX(0);
+            transition: transform 0.3s ease;
+            z-index: 30;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .history-sidebar.collapsed {
+            transform: translateX(100%);
+        }
+
+        .history-view {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .history-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .history-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #E5E7EB;
+        }
+
+        .btn-toggle {
+            padding: 8px;
+            background: transparent;
+            border: none;
+            color: #9CA3AF;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-toggle:hover {
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+        }
+
+        .history-search {
+            position: relative;
+            padding: 12px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 32px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6B7280;
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 12px 8px 32px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: #E5E7EB;
+            font-size: 13px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(217,70,239,0.3);
+        }
+
+        .history-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .history-item {
+            padding: 12px 16px;
+            margin-bottom: 6px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .history-item:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .history-item-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #E5E7EB;
+            margin-bottom: 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .history-item-meta {
+            font-size: 11px;
+            color: #6B7280;
+        }
+
+        .detail-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.02);
+        }
+
+        .toolbar-btn {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 12px;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px;
+            color: #9CA3AF;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .toolbar-btn:hover {
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .toolbar-spacer {
+            flex: 1;
+        }
+
+        .detail-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .detail-meta {
+            margin-bottom: 20px;
+        }
+
+        .detail-title-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #E5E7EB;
+            margin-bottom: 6px;
+        }
+
+        .detail-date {
+            font-size: 12px;
+            color: #6B7280;
+        }
+
+        .detail-section {
+            margin-bottom: 20px;
+        }
+
+        .detail-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #9CA3AF;
+            margin-bottom: 8px;
+        }
+
+        .detail-textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 12px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: #E5E7EB;
+            font-size: 13px;
+            line-height: 1.6;
+            resize: vertical;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .detail-textarea:focus {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(217,70,239,0.3);
+        }
+
+        .detail-tags {
+            padding: 12px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(217,70,239,0.2);
+            border-radius: 8px;
+            color: #c084fc;
+            font-size: 13px;
+            line-height: 1.6;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .detail-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn-save, .btn-delete {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-save {
+            background: linear-gradient(to right, #d946ef, #a855f7);
+            color: white;
+        }
+
+        .btn-save:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn-delete {
+            background: rgba(239,68,68,0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239,68,68,0.3);
+        }
+
+        .btn-delete:hover {
+            background: rgba(239,68,68,0.2);
+        }
+
+        /* MGX Theme */
+        body.theme-mgx .history-sidebar {
+            background: #FFFFFF;
+            border-left: 2px solid #E5E5E5;
+            box-shadow: -4px 0 16px rgba(0,0,0,0.08);
+        }
+
+        body.theme-mgx .history-header {
+            border-bottom: 1px solid #E5E5E5;
+        }
+
+        body.theme-mgx .history-title {
+            color: #1F2937;
+        }
+
+        body.theme-mgx .btn-toggle {
+            color: #6B7280;
+        }
+
+        body.theme-mgx .btn-toggle:hover {
+            background: #F3F4F6;
+            color: #1F2937;
+        }
+
+        body.theme-mgx .history-search {
+            border-bottom: 1px solid #E5E5E5;
+        }
+
+        body.theme-mgx .search-input {
+            background: #F9FAFB;
+            border: 1px solid #E5E5E5;
+            color: #1F2937;
+        }
+
+        body.theme-mgx .search-input:focus {
+            background: #FFFFFF;
+            border-color: #9CA3AF;
+        }
+
+        body.theme-mgx .history-item {
+            background: #F9FAFB;
+            border: 1px solid #E5E5E5;
+        }
+
+        body.theme-mgx .history-item:hover {
+            background: #FFFFFF;
+            border-color: #D1D5DB;
+        }
+
+        body.theme-mgx .history-item-title {
+            color: #1F2937;
+        }
+
+        body.theme-mgx .detail-toolbar {
+            border-bottom: 1px solid #E5E5E5;
+            background: #F9FAFB;
+        }
+
+        body.theme-mgx .toolbar-btn {
+            color: #6B7280;
+            border-color: #E5E5E5;
+        }
+
+        body.theme-mgx .toolbar-btn:hover {
+            background: #FFFFFF;
+            color: #1F2937;
+            border-color: #D1D5DB;
+        }
+
+        body.theme-mgx .detail-title-text {
+            color: #1F2937;
+        }
+
+        body.theme-mgx .detail-textarea {
+            background: #F9FAFB;
+            border-color: #E5E5E5;
+            color: #1F2937;
+        }
+
+        body.theme-mgx .detail-textarea:focus {
+            background: #FFFFFF;
+            border-color: #9CA3AF;
+        }
+
+        body.theme-mgx .detail-tags {
+            background: #F3F4F6;
+            border-color: #E5E5E5;
+            color: #4B5563;
+            font-family: inherit;
+        }
+
+        @media (max-width: 768px) {
+            .history-sidebar {
+                width: 100%;
+                top: 56px;
+            }
+        }
+
         /* Loader */
         .loader {
             width: 14px;
@@ -2111,6 +2468,72 @@
         </div>
     </div>
 
+    <!-- History Sidebar (Right) -->
+    <aside id="historySidebar" class="history-sidebar collapsed">
+        <!-- List View -->
+        <div id="historyListView" class="history-view">
+            <div class="history-header">
+                <h3 class="history-title">历史记录</h3>
+                <button id="btnToggleHistory" class="btn-toggle" title="收缩/展开">
+                    <i data-lucide="panel-right-close" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <div class="history-search">
+                <i data-lucide="search" class="w-4 h-4 search-icon"></i>
+                <input type="search" id="historySearch" placeholder="搜索歌词..." class="search-input">
+            </div>
+
+            <div id="historyList" class="history-list">
+                <!-- 动态加载历史记录 -->
+            </div>
+        </div>
+
+        <!-- Detail View -->
+        <div id="historyDetailView" class="history-view hidden">
+            <div class="detail-toolbar">
+                <button id="btnBackToList" class="toolbar-btn" title="返回列表">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>列表</span>
+                </button>
+                <button id="btnUndoEdit" class="toolbar-btn" title="撤销">
+                    <i data-lucide="undo" class="w-4 h-4"></i>
+                </button>
+                <div class="toolbar-spacer"></div>
+                <button id="btnCopyLyrics" class="toolbar-btn" title="复制歌词">
+                    <i data-lucide="copy" class="w-4 h-4"></i>
+                    <span>歌词</span>
+                </button>
+                <button id="btnCopyTags" class="toolbar-btn" title="复制风格">
+                    <i data-lucide="tag" class="w-4 h-4"></i>
+                    <span>风格</span>
+                </button>
+            </div>
+
+            <div class="detail-content">
+                <div class="detail-meta">
+                    <h4 id="detailTitle" class="detail-title-text"></h4>
+                    <p id="detailDate" class="detail-date"></p>
+                </div>
+
+                <div class="detail-section">
+                    <label class="detail-label">歌词内容</label>
+                    <textarea id="detailLyrics" class="detail-textarea" placeholder="歌词内容..."></textarea>
+                </div>
+
+                <div class="detail-section">
+                    <label class="detail-label">风格提示词</label>
+                    <div id="detailTags" class="detail-tags"></div>
+                </div>
+
+                <div class="detail-actions">
+                    <button id="btnSaveLyric" class="btn-save">保存修改</button>
+                    <button id="btnDeleteLyric" class="btn-delete">删除</button>
+                </div>
+            </div>
+        </div>
+    </aside>
+
     <script>
         window.onerror = function (msg, url, line, col, error) {
             alert("Script Error: " + msg + "\nLine: " + line);
@@ -2586,6 +3009,54 @@
             }
         };
 
+        // --- History Service ---
+        const HistoryService = {
+            async list(userId) {
+                const res = await fetch('/api/lyrics/list', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: userId })
+                });
+                return await res.json();
+            },
+            async get(lyricId, userId) {
+                const res = await fetch('/api/lyrics/get', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ lyric_id: lyricId, user_id: userId })
+                });
+                return await res.json();
+            },
+            async update(lyricId, userId, content, sunoTags) {
+                const res = await fetch('/api/lyrics/update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ lyric_id: lyricId, user_id: userId, content, suno_tags: sunoTags })
+                });
+                return await res.json();
+            },
+            async delete(lyricId, userId) {
+                const res = await fetch('/api/lyrics/delete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ lyric_id: lyricId, user_id: userId })
+                });
+                return await res.json();
+            },
+            formatDate(timestamp) {
+                const date = new Date(timestamp * 1000);
+                return date.toLocaleDateString('zh-CN');
+            },
+            getTimeAgo(timestamp) {
+                const now = Date.now();
+                const diff = now - (timestamp * 1000);
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                if (days === 0) return '今天';
+                if (days === 1) return '昨天';
+                return `${days}天前`;
+            }
+        };
+
         // --- Suno Service (OpenAI-HK Integration) ---
         const SunoService = {
             // 基础 API 地址 (OpenAI-HK)
@@ -2775,20 +3246,21 @@
 
         // --- LLM ---
         const LLM = {
-            async generate(prompt, userId) {
+            async generate(prompt, userId, topic) {
                 const cleanKey = state.config.apiKey;
                 if (!cleanKey) { alert("错误：未检测到有效卡密。请激活软件。"); return null; }
                 const _u = atob('aHR0cHM6Ly94eXVhcGkudG9wL3Yx');
                 const _m = atob('Z2VtaW5pLTMtcHJvLXByZXZpZXc=');
                 const sysPrompt = "You are a songwriter. Output format: 1. [CHORDS] Roman Numerals. 2. [LYRICS] with headers. 3. [SUNO STYLE] tags. CRITICAL: COUNT CHARACTERS ACCURATELY. NO Artist Names in Tags.";
                 try {
-                    // Pass user_id to backend
+                    // Pass user_id and topic to backend
                     const res = await fetch('/api/generate_lyric', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             user_id: userId,
-                            prompt: prompt
+                            prompt: prompt,
+                            topic: topic || 'Untitled'
                         })
                     });
 
@@ -3178,6 +3650,200 @@
 
                 // --- End Auth Listeners ---
 
+                // --- History Listeners ---
+                let historyState = {
+                    currentLyricId: null,
+                    editHistory: [],
+                    allLyrics: []
+                };
+
+                // Toggle sidebar
+                safeBind('btnToggleHistory', () => {
+                    const sidebar = document.getElementById('historySidebar');
+                    sidebar.classList.toggle('collapsed');
+                    if (!sidebar.classList.contains('collapsed') && state.user) {
+                        loadHistory();
+                    }
+                });
+
+                // Load history list
+                async function loadHistory() {
+                    if (!state.user) return;
+                    
+                    try {
+                        const res = await HistoryService.list(state.user.id);
+                        if (res.success && res.lyrics) {
+                            historyState.allLyrics = res.lyrics;
+                            renderHistoryList(res.lyrics);
+                        }
+                    } catch (err) {
+                        console.error('Failed to load history:', err);
+                    }
+                }
+
+                // Render history list
+                function renderHistoryList(lyrics) {
+                    const listEl = document.getElementById('historyList');
+                    if (!listEl) return;
+
+                    if (lyrics.length === 0) {
+                        listEl.innerHTML = '<div style="text-align:center;padding:40px;color:#6B7280;font-size:13px;">暂无历史记录</div>';
+                        return;
+                    }
+
+                    listEl.innerHTML = lyrics.map(lyric => `
+                        <div class="history-item" data-lyric-id="${lyric.id}">
+                            <div class="history-item-title">${lyric.title || '未命名'}</div>
+                            <div class="history-item-meta">
+                                ${HistoryService.getTimeAgo(lyric.created_at)} | ${(lyric.preview || '').length}字
+                            </div>
+                        </div>
+                    `).join('');
+
+                    // Bind click events
+                    document.querySelectorAll('.history-item').forEach(item => {
+                        item.onclick = () => {
+                            const lyricId = parseInt(item.dataset.lyricId);
+                            showHistoryDetail(lyricId);
+                        };
+                    });
+                }
+
+                // Search history
+                const historySearchInput = document.getElementById('historySearch');
+                if (historySearchInput) {
+                    historySearchInput.oninput = (e) => {
+                        const query = e.target.value.toLowerCase();
+                        const filtered = historyState.allLyrics.filter(lyric =>
+                            (lyric.title || '').toLowerCase().includes(query) ||
+                            (lyric.preview || '').toLowerCase().includes(query)
+                        );
+                        renderHistoryList(filtered);
+                    };
+                }
+
+                // Show detail
+                async function showHistoryDetail(lyricId) {
+                    if (!state.user) return;
+
+                    try {
+                        const res = await HistoryService.get(lyricId, state.user.id);
+                        if (res.success && res.lyric) {
+                            historyState.currentLyricId = lyricId;
+                            historyState.editHistory = [res.lyric.content];
+
+                            document.getElementById('detailTitle').innerText = res.lyric.title || '未命名';
+                            document.getElementById('detailDate').innerText = 
+                                `创建于 ${HistoryService.formatDate(res.lyric.created_at)}`;
+                            document.getElementById('detailLyrics').value = res.lyric.content || '';
+                            document.getElementById('detailTags').innerText = res.lyric.suno_tags || '无风格提示词';
+
+                            document.getElementById('historyListView').classList.add('hidden');
+                            document.getElementById('historyDetailView').classList.remove('hidden');
+                            
+                            lucide.createIcons();
+                        }
+                    } catch (err) {
+                        console.error('Failed to load detail:', err);
+                    }
+                }
+
+                // Back to list
+                safeBind('btnBackToList', () => {
+                    document.getElementById('historyDetailView').classList.add('hidden');
+                    document.getElementById('historyListView').classList.remove('hidden');
+                    historyState.currentLyricId = null;
+                });
+
+                // Undo edit
+                safeBind('btnUndoEdit', () => {
+                    if (historyState.editHistory.length > 1) {
+                        historyState.editHistory.pop();
+                        const previous = historyState.editHistory[historyState.editHistory.length - 1];
+                        document.getElementById('detailLyrics').value = previous;
+                    }
+                });
+
+                // Track edits
+                const detailLyricsTextarea = document.getElementById('detailLyrics');
+                if (detailLyricsTextarea) {
+                    detailLyricsTextarea.onchange = () => {
+                        const current = detailLyricsTextarea.value;
+                        if (historyState.editHistory[historyState.editHistory.length - 1] !== current) {
+                            historyState.editHistory.push(current);
+                        }
+                    };
+                }
+
+                // Copy lyrics
+                safeBind('btnCopyLyrics', () => {
+                    const lyrics = document.getElementById('detailLyrics').value;
+                    navigator.clipboard.writeText(lyrics).then(() => {
+                        alert('歌词已复制');
+                    }).catch(err => {
+                        console.error('Copy failed:', err);
+                    });
+                });
+
+                // Copy tags
+                safeBind('btnCopyTags', () => {
+                    const tags = document.getElementById('detailTags').innerText;
+                    navigator.clipboard.writeText(tags).then(() => {
+                        alert('风格提示词已复制');
+                    }).catch(err => {
+                        console.error('Copy failed:', err);
+                    });
+                });
+
+                // Save lyric
+                safeBind('btnSaveLyric', async () => {
+                    if (!state.user || !historyState.currentLyricId) return;
+
+                    const content = document.getElementById('detailLyrics').value;
+                    const tags = document.getElementById('detailTags').innerText;
+                    
+                    try {
+                        const res = await HistoryService.update(
+                            historyState.currentLyricId, 
+                            state.user.id, 
+                            content, 
+                            tags
+                        );
+                        
+                        if (res.success) {
+                            alert('保存成功');
+                            loadHistory();
+                        } else {
+                            alert('保存失败: ' + (res.error || '未知错误'));
+                        }
+                    } catch (err) {
+                        alert('保存失败: ' + err.message);
+                    }
+                });
+
+                // Delete lyric
+                safeBind('btnDeleteLyric', async () => {
+                    if (!state.user || !historyState.currentLyricId) return;
+                    
+                    if (!confirm('确定要删除这条记录吗？此操作不可撤销。')) return;
+
+                    try {
+                        const res = await HistoryService.delete(historyState.currentLyricId, state.user.id);
+                        if (res.success) {
+                            alert('删除成功');
+                            document.getElementById('historyDetailView').classList.add('hidden');
+                            document.getElementById('historyListView').classList.remove('hidden');
+                            loadHistory();
+                        } else {
+                            alert('删除失败: ' + (res.error || '未知错误'));
+                        }
+                    } catch (err) {
+                        alert('删除失败: ' + err.message);
+                    }
+                });
+
+                // --- End History Listeners ---
+
 
                 // Sidebar
                 const sb = document.getElementById('mainSidebar');
@@ -3399,7 +4065,7 @@
                     if (editorWrapper) editorWrapper.classList.add('generating');
 
                     try {
-                        const res = await LLM.generate(prompt, state.user.id);
+                        const res = await LLM.generate(prompt, state.user.id, topic);
 
                         if (editorWrapper) editorWrapper.classList.remove('generating');
 
