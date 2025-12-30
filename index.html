@@ -2870,10 +2870,11 @@
                 const headerBtn = document.getElementById('btnTrial');
                 if (headerBtn) {
                     if (state.user) {
-                        headerBtn.innerText = state.user.username;
+                        const remaining = state.user.is_pro ? '∞' : (1000 - state.user.trial_count);
+                        headerBtn.innerText = `${state.user.username} (${remaining})`;
                         headerBtn.onclick = () => this.showMemberInfo();
                     } else {
-                        headerBtn.innerText = '\u514d\u8d39\u8bd5\u7528';
+                        headerBtn.innerText = '会员登录';
                         headerBtn.onclick = () => this.showAuthModal();
                     }
                 }
