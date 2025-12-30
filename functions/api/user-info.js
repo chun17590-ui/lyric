@@ -1,4 +1,4 @@
-import { jsonResponse } from '../../_utils';
+import { jsonResponse } from '../_utils';
 
 export async function onRequestPost({ request, env }) {
     try {
