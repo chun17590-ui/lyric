@@ -67,10 +67,25 @@ export async function onRequestPost(context) {
 
         const lyricsContent = aiData.choices?.[0]?.message?.content || 'No lyrics generated.';
 
-        // 5. Save Lyrics to D1
+        // 5. Extract Suno Tags and generate title
+        const topic = body.topic || 'Untitled';
+        let sunoTags = '';
+        const tagMatch = lyricsContent.match(/\[SUNO\s*STYLE\][:\s]*(.*)/i);
+        if (tagMatch) {
+            sunoTags = tagMatch[1].trim();
+        }
+
+        // Generate title: topic_YYYYMMDD
+        const now = new Date();
+        const dateStr = now.getFullYear() + 
+                       String(now.getMonth() + 1).padStart(2, '0') + 
+                       String(now.getDate()).padStart(2, '0');
+        const title = `${topic}_${dateStr}`;
+
+        // Save Lyrics to D1 with extended fields
         await env.DB.prepare(
-            'INSERT INTO lyrics (user_id, prompt, content) VALUES (?, ?, ?)'
-        ).bind(user_id, prompt, lyricsContent).run();
+            'INSERT INTO lyrics (user_id, prompt, content, title, topic, suno_tags) VALUES (?, ?, ?, ?, ?, ?)'
+        ).bind(user_id, prompt, lyricsContent, title, topic, sunoTags).run();
 
         // Return new trial count
         const updatedUser = await env.DB.prepare('SELECT trial_count FROM users WHERE id = ?').bind(user_id).first();
