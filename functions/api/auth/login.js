@@ -10,8 +10,9 @@ export async function onRequestPost({ request, env }) {
 
         if (!env.DB) return jsonResponse({ error: 'DB not available' }, 500);
 
+        // Query user with email
         const user = await env.DB.prepare(
-            'SELECT id, username, trial_count, is_pro FROM users WHERE username = ? AND password = ?'
+            'SELECT id, username, email, trial_count, is_pro, created_at FROM users WHERE username = ? AND password = ?'
         ).bind(username, password).first();
 
         if (!user) {

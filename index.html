@@ -1937,7 +1937,7 @@
                 <h2
                     class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 mb-2">
                     欢迎回来</h2>
-                <p id="authSubTitle" class="text-sm text-gray-400 mb-6">登录以同步您的 PRO 状态和试用额度</p>
+                <p id="authSubTitle" class="text-sm text-gray-400 mb-6">登录以同步您的会员状态和试用额度</p>
 
                 <!-- Tabs -->
                 <div class="flex bg-white/5 p-1 rounded-lg mb-6">
@@ -1958,9 +1958,23 @@
                                 placeholder="Username">
                         </div>
                     </div>
-                    <div>
+                    <!-- Email Field (only show in register mode) -->
+                    <div id="authEmailField" class="hidden">
                         <label
-                            class="text-[10px] uppercase tracking-wider text-gray-500 font-bold mb-1 block pl-1">密码</label>
+                            class="text-[10px] uppercase tracking-wider text-gray-500 font-bold mb-1 block pl-1">邮箱</label>
+                        <div class="relative group">
+                            <input type="email" id="authEmail"
+                                class="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-gray-200 focus:outline-none focus:border-fuchsia-500/50 focus:bg-white/5 transition-all placeholder-gray-600"
+                                placeholder="your@email.com">
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1 pl-1">用于密码找回</p>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <label
+                                class="text-[10px] uppercase tracking-wider text-gray-500 font-bold block pl-1">密码</label>
+                            <button id="btnForgotPassword" class="text-xs text-fuchsia-400 hover:text-fuchsia-300 transition-colors hidden">忘记密码?</button>
+                        </div>
                         <div class="relative group">
                             <input type="password" id="authPassword"
                                 class="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-gray-200 focus:outline-none focus:border-fuchsia-500/50 focus:bg-white/5 transition-all placeholder-gray-600"
@@ -1979,6 +1993,101 @@
 
                 <button id="btnCloseAuth" class="mt-4 text-xs text-gray-500 hover:text-gray-300">暂不登录
                     (仅预览)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Member Info Modal -->
+    <div id="memberInfoModal"
+        class="fixed inset-0 z-[60] bg-black/80 hidden flex items-center justify-center backdrop-blur-sm">
+        <div class="glass-panel p-8 rounded-2xl w-96 border border-white/10 shadow-2xl relative">
+            <button id="btnCloseMemberInfo" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-fuchsia-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="user" class="w-8 h-8 text-white"></i>
+                </div>
+                <h2 class="text-xl font-bold text-white mb-6">会员信息</h2>
+                
+                <div class="space-y-3 text-left bg-white/5 rounded-lg p-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-400">用户名</span>
+                        <span id="memberUsername" class="text-sm text-white font-medium"></span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-400">邮箱</span>
+                        <span id="memberEmail" class="text-sm text-gray-300"></span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-400">会员类型</span>
+                        <span id="memberType" class="text-sm text-fuchsia-400 font-medium"></span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-400">剩余次数</span>
+                        <span id="memberTrialCount" class="text-lg text-white font-bold"></span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-400">注册时间</span>
+                        <span id="memberCreatedAt" class="text-xs text-gray-400"></span>
+                    </div>
+                </div>
+
+                <button id="btnLogout" class="w-full mt-6 bg-gray-700 hover:bg-gray-600 text-white py-2.5 rounded-lg transition-all">
+                    退出登录
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgotPasswordModal"
+        class="fixed inset-0 z-[60] bg-black/80 hidden flex items-center justify-center backdrop-blur-sm">
+        <div class="glass-panel p-8 rounded-2xl w-96 border border-white/10 shadow-2xl relative">
+            <button id="btnCloseForgotPassword" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-fuchsia-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="mail" class="w-8 h-8 text-white"></i>
+                </div>
+                <h2 class="text-xl font-bold text-white mb-2">找回密码</h2>
+                <p class="text-sm text-gray-400 mb-6">输入注册邮箱获取验证码</p>
+                
+                <div id="forgotStep1" class="space-y-4">
+                    <div>
+                        <input type="email" id="forgotEmail"
+                            class="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-gray-200 focus:outline-none focus:border-fuchsia-500/50 focus:bg-white/5 transition-all placeholder-gray-600"
+                            placeholder="your@email.com">
+                    </div>
+                    <button id="btnSendResetCode"
+                        class="w-full bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-500 hover:to-purple-500 text-white font-bold py-2.5 rounded-lg transition-all">
+                        发送验证码
+                    </button>
+                </div>
+
+                <div id="forgotStep2" class="space-y-4 hidden">
+                    <div class="text-left">
+                        <p class="text-xs text-gray-400 mb-2">验证码已发送至: <span id="forgotEmailDisplay" class="text-fuchsia-400"></span></p>
+                        <p class="text-xs text-yellow-400 mb-3">【演示】验证码: <span id="resetTokenDisplay" class="font-mono font-bold"></span></p>
+                    </div>
+                    <div>
+                        <input type="text" id="resetToken"
+                            class="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-gray-200 focus:outline-none focus:border-fuchsia-500/50 focus:bg-white/5 transition-all placeholder-gray-600"
+                            placeholder="输入6位验证码">
+                    </div>
+                    <div>
+                        <input type="password" id="newPassword"
+                            class="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-gray-200 focus:outline-none focus:border-fuchsia-500/50 focus:bg-white/5 transition-all placeholder-gray-600"
+                            placeholder="新密码 (至少6位)">
+                    </div>
+                    <button id="btnResetPassword"
+                        class="w-full bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-500 hover:to-purple-500 text-white font-bold py-2.5 rounded-lg transition-all">
+                        重置密码
+                    </button>
+                </div>
+
+                <div id="forgotError" class="text-red-400 text-xs mt-3 hidden"></div>
             </div>
         </div>
     </div>
@@ -2416,11 +2525,11 @@
         };
 
         const AuthService = {
-            async register(username, password) {
+            async register(username, email, password) {
                 const res = await fetch('/api/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
+                    body: JSON.stringify({ username, email, password })
                 });
                 return await res.json();
             },
@@ -2429,6 +2538,30 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })
+                });
+                return await res.json();
+            },
+            async forgotPassword(email) {
+                const res = await fetch('/api/auth/forgot-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                return await res.json();
+            },
+            async resetPassword(email, reset_token, new_password) {
+                const res = await fetch('/api/auth/reset-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, reset_token, new_password })
+                });
+                return await res.json();
+            },
+            async getUserInfo(user_id) {
+                const res = await fetch('/api/user-info', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id })
                 });
                 return await res.json();
             }
@@ -2675,6 +2808,9 @@
 
 
                 this.updateSunoStatus();
+                
+                // Update header button based on login status
+                this.updateHeaderUser();
             },
 
             initTheme() {
@@ -2727,6 +2863,46 @@
 
             showAuthModal() {
                 document.getElementById('authModal').classList.remove('hidden');
+            },
+
+            updateHeaderUser() {
+                // Update header to show username if logged in
+                const headerBtn = document.getElementById('btnTrial');
+                if (headerBtn) {
+                    if (state.user) {
+                        headerBtn.innerText = state.user.username;
+                        headerBtn.onclick = () => this.showMemberInfo();
+                    } else {
+                        headerBtn.innerText = '\u514d\u8d39\u8bd5\u7528';
+                        headerBtn.onclick = () => this.showAuthModal();
+                    }
+                }
+            },
+
+            async showMemberInfo() {
+                if (!state.user) return;
+                
+                // Fetch latest user info
+                try {
+                    const res = await AuthService.getUserInfo(state.user.id);
+                    if (res.success && res.user) {
+                        state.user = res.user;
+                        state.saveUser();
+                        
+                        // Update member info modal
+                        document.getElementById('memberUsername').innerText = res.user.username;
+                        document.getElementById('memberEmail').innerText = res.user.email || '\u672a\u8bbe\u7f6e';
+                        document.getElementById('memberType').innerText = res.user.is_pro ? 'Pro \u4f1a\u5458' : '\u514d\u8d39\u4f1a\u5458';
+                        document.getElementById('memberTrialCount').innerText = res.user.is_pro ? '\u221e' : (1000 - res.user.trial_count);
+                        
+                        const createdDate = new Date(res.user.created_at * 1000);
+                        document.getElementById('memberCreatedAt').innerText = createdDate.toLocaleDateString('zh-CN');
+                        
+                        document.getElementById('memberInfoModal').classList.remove('hidden');
+                    }
+                } catch (e) {
+                    console.error('Failed to load member info:', e);
+                }
             },
 
 
@@ -2836,21 +3012,29 @@
                     document.getElementById('tabLogin').className = "flex-1 py-1.5 text-sm rounded-md bg-white/10 text-white shadow transition-all";
                     document.getElementById('tabRegister').className = "flex-1 py-1.5 text-sm rounded-md text-gray-400 hover:text-white transition-all";
                     document.getElementById('btnAuthText').innerText = "立即登录";
+                    // Hide email field in login mode
+                    document.getElementById('authEmailField').classList.add('hidden');
+                    document.getElementById('btnForgotPassword').classList.remove('hidden');
                 });
                 safeBind('tabRegister', () => {
                     authMode = 'register';
                     document.getElementById('tabRegister').className = "flex-1 py-1.5 text-sm rounded-md bg-white/10 text-white shadow transition-all";
                     document.getElementById('tabLogin').className = "flex-1 py-1.5 text-sm rounded-md text-gray-400 hover:text-white transition-all";
                     document.getElementById('btnAuthText').innerText = "注册账号";
+                    // Show email field in register mode
+                    document.getElementById('authEmailField').classList.remove('hidden');
+                    document.getElementById('btnForgotPassword').classList.add('hidden');
                 });
 
                 safeBind('btnAuthAction', async () => {
                     const u = document.getElementById('authUsername').value;
                     const p = document.getElementById('authPassword').value;
+                    const e = document.getElementById('authEmail').value;
                     const errDiv = document.getElementById('authError');
                     const btn = document.getElementById('btnAuthAction');
 
                     if (!u || !p) { errDiv.innerText = "请输入用户名和密码"; errDiv.classList.remove('hidden'); return; }
+                    if (authMode === 'register' && !e) { errDiv.innerText = "请输入邮箱"; errDiv.classList.remove('hidden'); return; }
 
                     btn.disabled = true;
                     errDiv.classList.add('hidden');
@@ -2860,7 +3044,7 @@
                         if (authMode === 'login') {
                             res = await AuthService.login(u, p);
                         } else {
-                            res = await AuthService.register(u, p);
+                            res = await AuthService.register(u, e, p);
                             if (res.success) {
                                 res = await AuthService.login(u, p);
                             }
@@ -2874,6 +3058,7 @@
                             state.saveUser();
                             document.getElementById('authModal').classList.add('hidden');
                             alert(`欢迎, ${res.user.username}!`);
+                            UI.updateHeaderUser(); // Update header display
                         }
                     } catch (e) {
                         errDiv.innerText = e.message;
@@ -2886,6 +3071,91 @@
                 if (!state.user) {
                     setTimeout(() => UI.showAuthModal(), 500);
                 }
+                // --- Forgot Password ---
+                safeBind('btnForgotPassword', () => {
+                    document.getElementById('authModal').classList.add('hidden');
+                    document.getElementById('forgotPasswordModal').classList.remove('hidden');
+                    document.getElementById('forgotStep1').classList.remove('hidden');
+                    document.getElementById('forgotStep2').classList.add('hidden');
+                });
+
+                safeBind('btnCloseForgotPassword', () => {
+                    document.getElementById('forgotPasswordModal').classList.add('hidden');
+                });
+
+                safeBind('btnSendResetCode', async () => {
+                    const email = document.getElementById('forgotEmail').value;
+                    const errDiv = document.getElementById('forgotError');
+                    const btn = document.getElementById('btnSendResetCode');
+                    
+                    if (!email) { errDiv.innerText = "\u8bf7\u8f93\u5165\u90ae\u7bb1"; errDiv.classList.remove('hidden'); return; }
+                    
+                    btn.disabled = true;
+                    errDiv.classList.add('hidden');
+                    
+                    try {
+                        const res = await AuthService.forgotPassword(email);
+                        if (res.error) {
+                            errDiv.innerText = res.error;
+                            errDiv.classList.remove('hidden');
+                        } else {
+                            document.getElementById('forgotEmailDisplay').innerText = email;
+                            document.getElementById('resetTokenDisplay').innerText = res.reset_token; // Demo only
+                            document.getElementById('forgotStep1').classList.add('hidden');
+                            document.getElementById('forgotStep2').classList.remove('hidden');
+                        }
+                    } catch (e) {
+                        errDiv.innerText = e.message;
+                        errDiv.classList.remove('hidden');
+                    }
+                    btn.disabled = false;
+                });
+
+                safeBind('btnResetPassword', async () => {
+                    const email = document.getElementById('forgotEmail').value;
+                    const token = document.getElementById('resetToken').value;
+                    const newPass = document.getElementById('newPassword').value;
+                    const errDiv = document.getElementById('forgotError');
+                    const btn = document.getElementById('btnResetPassword');
+                    
+                    if (!token || !newPass) { errDiv.innerText = "\u8bf7\u8f93\u5165\u9a8c\u8bc1\u7801\u548c\u65b0\u5bc6\u7801"; errDiv.classList.remove('hidden'); return; }
+                    
+                    btn.disabled = true;
+                    errDiv.classList.add('hidden');
+                    
+                    try {
+                        const res = await AuthService.resetPassword(email, token, newPass);
+                        if (res.error) {
+                            errDiv.innerText = res.error;
+                            errDiv.classList.remove('hidden');
+                        } else {
+                            alert('\u5bc6\u7801\u91cd\u7f6e\u6210\u529f\uff01\u8bf7\u4f7f\u7528\u65b0\u5bc6\u7801\u767b\u5f55');
+                            document.getElementById('forgotPasswordModal').classList.add('hidden');
+                            document.getElementById('authModal').classList.remove('hidden');
+                        }
+                    } catch (e) {
+                        errDiv.innerText = e.message;
+                        errDiv.classList.remove('hidden');
+                    }
+                    btn.disabled = false;
+                });
+
+                // --- Member Info ---
+                safeBind('btnCloseMemberInfo', () => {
+                    document.getElementById('memberInfoModal').classList.add('hidden');
+                });
+
+                safeBind('btnLogout', () => {
+                    if (confirm('\u786e\u5b9a\u8981\u9000\u51fa\u767b\u5f55\u5417\uff1f')) {
+                        state.user = null;
+                        state.saveUser();
+                        document.getElementById('memberInfoModal').classList.add('hidden');
+                        alert('\u5df2\u9000\u51fa\u767b\u5f55');
+                        UI.updateHeaderUser();
+                        UI.showAuthModal();
+                    }
+                });
+
                 // --- End Auth Listeners ---
 
 
