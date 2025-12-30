@@ -1383,9 +1383,12 @@
             </div>
         </div>
         <div class="flex items-center gap-3">
-            <div id="trialBadge" class="text-[10px] bg-white/10 px-2 py-1 rounded text-gray-400 font-mono">
-                试用: <span id="trialCountDisplay">0</span>/3
-            </div>
+            <!-- Member/Login Button -->
+            <button id="btnMemberLogin" type="button"
+                class="text-sm bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-500 hover:to-purple-500 text-white font-medium px-4 py-1.5 rounded-lg shadow-lg shadow-fuchsia-500/20 transition-all active:scale-95">
+                会员登录
+            </button>
+            
             <!-- Audio Settings Button -->
             <button id="btnThemeToggle" type="button"
                 class="text-gray-400 hover:text-fuchsia-500 transition-colors p-2 rounded-lg hover:bg-white/5 mr-1"
@@ -2867,7 +2870,7 @@
 
             updateHeaderUser() {
                 // Update header to show username if logged in
-                const headerBtn = document.getElementById('btnTrial');
+                const headerBtn = document.getElementById('btnMemberLogin');
                 if (headerBtn) {
                     if (state.user) {
                         const remaining = state.user.is_pro ? '∞' : (1000 - state.user.trial_count);
